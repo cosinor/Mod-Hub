@@ -1,0 +1,33 @@
+{
+	"Metadata":
+	{
+		"Name": "Nighttime Snowboarding",
+		"Author": "co$inor",
+		"Description": "Replaces the Morning Dawn palette for ICZ1's snowboarding cutscene to nighttime to match the miniboss palette.",
+		"ModVersion": "31/7/26"
+	},
+
+	"OtherMods":
+	{
+		"time-consistent-adventure":
+		{
+			"Priority" : "Lower"
+		},
+		
+		"moar-transparency":
+		{
+			"Priority" : "Higher"
+		},
+
+		"uozo-palettes":
+		{
+			"Priority" : "Lower"
+		},
+		
+		"useott-s-original-zone-order":
+		{
+			"Priority" : "Lower"
+		}
+	},
+}
+

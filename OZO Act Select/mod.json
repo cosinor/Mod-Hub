@@ -1,0 +1,28 @@
+{
+	"Metadata":
+	{
+		"Name": "OZO Act Select",
+		"UniqueID": "ozo-act-select",
+		"Author": "co$inor",
+		"Description": "Changes the Act Select's zone order to put Flying Battery at Zone 5 when using Original Zone Order type mods.",
+		"ModVersion": "7/21/26",
+	},
+
+	"OtherMods":
+	{
+		"november-seasons":
+		{
+			"Priority" : "Higher"
+		},
+
+		"new-battery-blues":
+		{
+			"Priority" : "Higher"
+		},
+
+		"jam-difficulty-pale":
+		{
+			"Priority" : "Lower"
+		}
+	}
+}

@@ -1,0 +1,106 @@
+//# address-hook(0x23de96) end(0x23dec4)
+function void fn23de96()
+{	
+	if Mods.isModActive("Useott's Original Zone Order") && System.getGlobalVariableValueByName("useottsOriginalZoneOrder.iczPalettes") == 1 && Game.getSetting(SETTING_ICZ_NIGHTTIME)
+	{
+		u32[A1 + 0x00] = 0x0eea0ec8
+		u32[A1 + 0x04] = 0x0ca60c84
+		u32[A1 + 0x08] = 0x0c620a40
+		u32[A1 + 0x0c] = 0x08400820
+		u32[A1 + 0x10] = 0x06000400
+		u32[A1 + 0x14] = 0x2000800
+		u32[A1 + 0x18] = 0x0ea40c82
+		u16[A1 + 0x1c] = 0x0822
+	}
+		
+	if Game.getSetting(SETTING_ICZ_NIGHTTIME)
+	{
+		u32[A1 + 0x00] = 0x0eea0ec8
+		u32[A1 + 0x04] = 0x0ca60c84
+		u32[A1 + 0x08] = 0x0c620a40
+		u32[A1 + 0x0c] = 0x08400820
+		u32[A1 + 0x10] = 0x06000400
+		u32[A1 + 0x14] = 0x2000800
+		u32[A1 + 0x18] = 0x0ea40c82
+		u16[A1 + 0x1c] = 0x0822
+	}
+
+	else base.fn23de96()
+	
+	if Mods.isModActive("Time Consistent Adventure") || Mods.isModActive("UOZO Palettes")
+	{
+		if (isMainCharacter(CHARACTER_KNUCKLES)) 
+		{
+			if System.getGlobalVariableValueByName("tca.icz") || Game.getSetting(SETTING_ICZ_NIGHTTIME)
+			{
+				u32[A1 + 0x00] = 0x0eea0ec8
+				u32[A1 + 0x04] = 0x0ca60c84
+				u32[A1 + 0x08] = 0x0c620a40
+				u32[A1 + 0x0c] = 0x08400820
+				u32[A1 + 0x10] = 0x06000400
+				u32[A1 + 0x14] = 0x2000800
+				u32[A1 + 0x18] = 0x0ea40c82
+				u16[A1 + 0x1c] = 0x0822
+			}
+			else base.fn23de96()
+		}
+		
+		else
+		{
+			if (System.getGlobalVariableValueByName("tca.icz") && !System.getGlobalVariableValueByName("tca.intended")) || (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.iczPalettes") == 1 && Game.getSetting(SETTING_ICZ_NIGHTTIME))
+			{
+				u32[A1 + 0x00] = 0x0eea0ec8
+				u32[A1 + 0x04] = 0x0ca60c84
+				u32[A1 + 0x08] = 0x0c620a40
+				u32[A1 + 0x0c] = 0x08400820
+				u32[A1 + 0x10] = 0x06000400
+				u32[A1 + 0x14] = 0x2000800
+				u32[A1 + 0x18] = 0x0ea40c82
+				u16[A1 + 0x1c] = 0x0822
+			}
+			else base.fn23de96()
+		}
+	}
+}
+
+//# address-hook(0x052f32) end(0x052f9e)
+function void fn052f32()
+{
+	if ((Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("UOZO Palettes")) && global.zone_act == 0x0401 && System.getGlobalVariableValueByName("useottsOriginalZoneOrder.fbzPalettes") == 1 && Game.getSetting(SETTING_ICZ_NIGHTTIME))
+	{
+		if (allocDynamicObjectStd())
+		{
+			objA1.update_address = 0x0532b6
+			if (allocDynamicObjectAfterA1())
+			{
+				objA1.update_address = 0x0533ce
+				zeroMemory(0xffffeeea, 0x14)
+
+				A5 = 0xffffeeea		// Start address of vertical scroll offsets
+				D1 = 9
+				while (D1.s16 >= 0)
+				{
+					if (!allocDynamicObjectAfterA1())
+						break
+
+					u16[(A5+=2)-2] = A1.u16
+					objA1.update_address = 0x0534c6
+					u16[A1 + 0x2e] = D1.u16
+					--D1.s16
+				}
+			}
+		}
+		A1 = 0x052dd0
+		A5 = 0xfffffc62
+		A6 = 0xfffffce2
+
+		u16[A5] = 0x0ec0
+		u16[A6] = 0x0ec0
+
+		copyMemory(A5+2, A1, 16)
+		copyMemory(A6+2, A1, 16)
+	}
+	
+	else
+		base.fn052f32()
+}

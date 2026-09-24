@@ -1,0 +1,111 @@
+//# address-hook(0x082772) end(0x082830)
+function void fn082772()
+{
+	bool goto0827a8 = false
+	A1 = 0xffffb000
+	if (u8[A1 + 0x34] != 0)
+	{
+		u8[A1 + 0x26] += 0x10
+		if (u8[A1 + 0x34] < 0x1e)
+		{
+			goto0827a8 = true
+		}
+		else
+		{
+			objA0.velocity.x = 0
+			objA0.velocity.y = 0
+			D2 = u32[0xfffffa82] >> 8
+			D2.s16 = -D2.s16
+			D3 = 0
+		}
+	}
+	else
+	{
+		u8[A1 + 0x26] = 0
+		u8[A1 + 0x2a] = 0
+		goto0827a8 = true
+	}
+
+	if (goto0827a8)
+	{
+		D0 = 0x40
+		D2 = objA0.velocity.x
+		D3 = 0
+		if (D2.u16 != 0)
+		{
+			if (D2.s16 >= 0)
+			{
+				D0.s16 = -D0.s16
+				D2.u16 += D0.u16
+				if (D2.s16 < 0)
+				{
+					D2 = 0
+				}
+			}
+			else
+			{
+				D2.u16 += D0.u16
+				if (D2.s16 > 0)
+				{
+					D2 = 0
+				}
+			}
+			objA0.velocity.x = D2.u16
+		}
+
+		D0 = 0x40
+		D3.u16 = objA0.velocity.y
+		if (D3.u16 != 0)
+		{
+			if (D3.s16 >= 0)
+			{
+				D0.s16 = -D0.s16
+				D3.u16 += D0.u16
+				if (D3.s16 < 0)
+				{
+					D3 = 0
+				}
+			}
+			else
+			{
+				D3.u16 += D0.u16
+				if (D3.s16 > 0)
+				{
+					D3 = 0
+				}
+			}
+			objA0.velocity.y = D3.u16
+		}
+
+		// Evaluate player input
+		if (control.pad1 != 0 && player1.control_override == 0)
+		{
+			D0.u16 = (control.pad1.state & CONTROL_DPAD) * 4
+
+			// Check if jump button held
+			if (control.pad1.state & CONTROL_ABC) //changed control.pad1.pressed to control.pad1.state.
+			{
+				if (u8[A1 + 0x34] == 0)
+				{
+					// Values there are vectors in the pressed direction of length 0x0600 (incl. diagonals, and with opposites cancelling out)
+					D2.s16 = s16[0x082872 + D0.u16]
+					D3.s16 = s16[0x082874 + D0.u16]
+				#if STANDALONE
+					// Weaken the effect to make the boss fights harder
+					D2.s16 = D2.s16 * 3/5
+					D3.s16 = D3.s16 * 3/5
+				#endif
+					objA0.velocity.x = D2.s16
+					objA0.velocity.y = D3.s16
+				}
+			}
+			if (D0.u16 != 0)
+			{
+				D4.s16 = u16[0x082832 + D0.u16]
+				D5.s16 = u16[0x082834 + D0.u16]
+				D2.s16 += D4.s16
+				D3.s16 += D5.s16
+			}
+		}
+	}
+}

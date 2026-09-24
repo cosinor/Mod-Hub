@@ -1,0 +1,299 @@
+function string ActSelect.GetZoneName(u8 zoneNumber)
+{
+	if (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended")) && (zoneNumber >= 4 && zoneNumber <= 7)
+		return (zoneNumber == 4 ? "Flying Battery Zone" : zoneNumber == 5 ? "IceCap Zone" : zoneNumber == 6 ? "Launch Base Zone" : "Mushroom Hill Zone")
+
+	return base.ActSelect.GetZoneName(zoneNumber)
+}
+
+function u16 ActSelect.TranslateZoneAct(u8 zoneNumber, u8 act)
+{
+	if (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended")) && (zoneNumber >= 4 && zoneNumber <= 7)
+	{	
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (zoneNumber == 4)
+				return 0x0401
+			
+			zoneNumber -= 1
+		}
+
+		else
+		{
+			if (zoneNumber == 4)
+				return (act == 0 ? 0x0400 : 0x0401)
+		
+			zoneNumber -= 1
+		}
+	}
+
+	return base.ActSelect.TranslateZoneAct(zoneNumber, act)
+}
+
+function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image)
+{
+	if (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended"))
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{	
+			if (System.getGlobalVariableValueByName("tca.mgz") && (zone == 2))
+				return stringformat((Mods.isModActive("dusk-mgz-fix") ? "zone03_act2%s_tca_fix" : "zone03_act2%s_tca"), (image % 2 == 0) ? "a" : "b")
+
+			if (zone == 4)
+			{
+				if (System.getGlobalVariableValueByName("tca.fbz") && !Mods.isModActive("sonic 3 1103 flying battery"))
+				{
+					if (levelselect.characters == 3 || levelselect.characters == 4) && (System.getGlobalVariableValueByName("tca.knux_fbz"))
+						return stringformat("zone08_act2%s", (image % 2 == 0) ? "a" : "b")
+		
+					else
+					{
+						if (image == 1) 
+							return (System.getGlobalVariableValueByName("tca.fbz_bg") ? "zone08_act2b_tca_light" : "zone08_act2b_tca_dark")
+					}	
+				}
+
+				else if (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.fbzPalettes") && !Mods.isModActive("sonic 3 1103 flying battery"))
+				{
+					if (image == 1)
+						return (Game.getSetting(SETTING_ICZ_NIGHTTIME) ? "zone08_act2b_uozo_night" : "zone08_act2b_uozo_dawn")
+				}
+
+				return stringformat((Mods.isModActive("sonic 3 1103 flying battery") ? "zone08_act2%s_lego1103" : "zone08_act2%s"), (image % 2 == 0) ? "a" : "b")
+			}
+
+			else if (zone == 5)
+			{
+				if (Mods.isModActive("Time Consistent Adventure") || Mods.isModActive("Useott's Original Zone Order"))
+				{
+					if (System.getGlobalVariableValueByName("tca.icz"))
+					{
+						if (image != 1)
+						{
+							if (levelselect.characters == 3 || levelselect.characters == 4) 
+								return "zone05_act2a_tca_knux"
+						}	
+					}
+				}
+
+				return stringformat("zone05_act2%s", (image % 2 == 0) ? "a" : "b")
+			}	
+
+			else if (zone == 6)
+			{
+				if (System.getGlobalVariableValueByName("tca.lbz"))
+				{
+					if (image != 1)
+						return "zone06_act2a_tca"
+				}
+
+				return stringformat("zone06_act2%s", (image % 2 == 0) ? "a" : "b")
+			}
+
+			else if (zone == 7)
+				return stringformat("zone07_act1%s", (image % 2 == 0) ? "a" : "b")
+
+			else if (System.getGlobalVariableValueByName("tca.soz") && (zone == 8))
+				return stringformat("zone09_act2%s", (image % 2 == 0) ? "a" : "b")
+			
+			else if (zone == 11 && act == 0 && System.getGlobalVariableValueByName("tca.ssz_sonic"))
+			{
+				if System.getGlobalVariableValueByName("tca.ssz_trans_point") == 3
+					return stringformat((System.getGlobalVariableValueByName("tca.pal_ssz_dawn") ? "zone12_act1%s_tca_pink" : "zone12_act1%s_tca"), (image % 2 == 0) ? "a" : "b")
+
+				else if System.getGlobalVariableValueByName("tca.ssz_trans_point") < 3 && System.getGlobalVariableValueByName("tca.ssz_trans_point") > 1 && image != 1
+					return (System.getGlobalVariableValueByName("tca.pal_ssz_dawn") ? "zone12_act1a_tca_pink" : "zone12_act1a_tca")
+			}
+		}
+
+		else
+		{
+			if (System.getGlobalVariableValueByName("tca.mgz") && (zone == 2) && (act == 1))
+				return stringformat((Mods.isModActive("dusk-mgz-fix") ? "zone03_act2%s_tca_fix" : "zone03_act2%s_tca"), (image % 2 == 0) ? "a" : "b")	
+
+			if (zone == 4)
+			{
+				if (System.getGlobalVariableValueByName("tca.fbz") && !Mods.isModActive("sonic 3 1103 flying battery"))
+				{
+					if (levelselect.characters == 3 || levelselect.characters == 4) && (System.getGlobalVariableValueByName("tca.knux_fbz"))		
+						return stringformat((act == 0 ? "zone08_act1%s" : "zone08_act2%s"), (image % 2 == 0) ? "a" : "b")
+			
+					else
+					{
+						if (act == 0 && image != 1)
+							return (System.getGlobalVariableValueByName("tca.bg_stars") ? "zone08_act1a_tca_star" : "zone08_act1a_tca_cloud")
+
+						if (act == 1 && image == 1)
+							return (System.getGlobalVariableValueByName("tca.fbz_bg") ? "zone08_act2b_tca_light" : "zone08_act2b_tca_dark")
+					}	
+				}
+
+				else if (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.fbzPalettes"))
+				{
+					if (act == 0 && image != 1) 
+						return "zone08_act1a_uozo"
+
+					else if (act == 1 && image == 1)
+						return (Game.getSetting(SETTING_ICZ_NIGHTTIME) ? "zone08_act2b_uozo_night" : "zone08_act2b_uozo_dawn")
+				}
+
+				if (act == 0)
+					return stringformat((Mods.isModActive("sonic 3 1103 flying battery") ? "zone08_act1%s_lego1103" : "zone08_act1%s"), (image % 2 == 0) ? "a" : "b")
+				else
+					return stringformat((Mods.isModActive("sonic 3 1103 flying battery") ? "zone08_act2%s_lego1103" : "zone08_act2%s"), (image % 2 == 0) ? "a" : "b")
+			}
+
+			else if (zone == 5)
+			{
+				if (Mods.isModActive("Time Consistent Adventure") || Mods.isModActive("Useott's Original Zone Order"))
+				{
+					if (System.getGlobalVariableValueByName("tca.icz"))
+					{
+						if (act == 0 && image == 1)
+							return ((levelselect.characters == 3 || levelselect.characters == 4) ? "zone05_act1b_tca_knux" : "zone05_act1b_ozo")
+
+						else if (act == 1 && image != 1)
+						{
+							if (levelselect.characters == 3 || levelselect.characters == 4) 
+								return "zone05_act2a_tca_knux"
+						}	
+					}
+
+					else if (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.iczPalettes"))
+					{
+						if (act == 0 && image == 1)
+							return "zone05_act1b_ozo"
+					}
+				}
+
+				return stringformat((act == 0 ? "zone05_act1%s" : "zone05_act2%s"), (image % 2 == 0) ? "a" : "b")
+			}	
+
+			else if (zone == 6)
+			{
+				if (System.getGlobalVariableValueByName("tca.lbz"))
+				{
+					if (act == 0 && image != 1)
+						return ((levelselect.characters == 3 || levelselect.characters == 4) ? "zone06_act1a_tca_knux" : "zone06_act1a_tca")
+
+					if (act == 0 && image == 1)
+						return "zone06_act1b_tca"
+
+					if (act == 1 && image != 1)
+						return "zone06_act2a_tca"
+				}
+
+				return stringformat((act == 0 ? "zone06_act1%s" : "zone06_act2%s"), (image % 2 == 0) ? "a" : "b")
+			}
+
+			else if (zone == 7)
+				return stringformat((act == 0 ? "zone07_act1%s" : "zone07_act2%s"), (image % 2 == 0) ? "a" : "b")
+				
+			else if (zone == 8) && System.getGlobalVariableValueByName("tca.soz")
+			{
+				if (act == 0)
+				{
+					if (levelselect.characters == 3 || levelselect.characters == 4) && !System.getGlobalVariableValueByName("tca.knux_fbz")
+						return stringformat((System.getGlobalVariableValueByName("tca.soz_bg") ? "zone09_act1%s_tca_knux_tweak" : "zone09_act1%s_tca_knux"), (image % 2 == 0) ? "a" : "b")
+					
+					else
+						return stringformat("zone09_act1%s_tca", (image % 2 == 0) ? "a" : "b")
+				}
+			}
+
+			else if (zone == 11 && act == 0 && System.getGlobalVariableValueByName("tca.ssz_sonic"))
+			{
+				if System.getGlobalVariableValueByName("tca.ssz_trans_point") == 3
+					return stringformat((System.getGlobalVariableValueByName("tca.pal_ssz_dawn") ? "zone12_act1%s_tca_pink" : "zone12_act1%s_tca"), (image % 2 == 0) ? "a" : "b")
+
+				else if System.getGlobalVariableValueByName("tca.ssz_trans_point") < 3 && System.getGlobalVariableValueByName("tca.ssz_trans_point") > 1 && image != 1
+					return (System.getGlobalVariableValueByName("tca.pal_ssz_dawn") ? "zone12_act1a_tca_pink" : "zone12_act1a_tca")
+			}
+		}
+	}
+
+	else if Mods.isModActive("Time Consistent Adventure") && !System.getGlobalVariableValueByName("tca.intended")
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (System.getGlobalVariableValueByName("tca.mgz") && (zone == 2))
+				return stringformat((Mods.isModActive("dusk-mgz-fix") ? "zone03_act2%s_tca_fix" : "zone03_act2%s_tca"), (image % 2 == 0) ? "a" : "b")
+
+			else if (System.getGlobalVariableValueByName("tca.lbz") && (zone == 5))
+			{
+				if (image != 1)
+					return "zone06_act2a_tca"
+			}
+			
+			else if (Mods.isModActive("sonic 3 1103 flying battery")) && (zone == 7)
+				return stringformat("zone08_act2%s_lego1103", (image % 2 == 0) ? "a" : "b")
+		}
+	
+		else
+		{
+			if (System.getGlobalVariableValueByName("tca.mgz") && (zone == 2) && (act == 1))
+				return stringformat((Mods.isModActive("dusk-mgz-fix") ? "zone03_act2%s_tca_fix" : "zone03_act2%s_tca"), (image % 2 == 0) ? "a" : "b")
+				
+			else if (System.getGlobalVariableValueByName("tca.lbz") && (zone == 5))
+			{
+				if (act == 0 && image != 1)
+					return ((levelselect.characters == 3 || levelselect.characters == 4) ? "zone06_act1a_tca_knux" : "zone06_act1a_tca")
+					
+				if (act == 0 && image == 1)
+					return "zone06_act1b_tca"
+
+				if (act == 1 && image != 1)
+					return "zone06_act2a_tca"
+			}
+			
+			else if (Mods.isModActive("sonic 3 1103 flying battery")) && (zone == 7)
+			{
+				if (act == 0)
+					return stringformat("zone08_act1%s_lego1103", (image % 2 == 0) ? "a" : "b")
+				else
+					return stringformat("zone08_act2%s_lego1103", (image % 2 == 0) ? "a" : "b")
+			}
+
+			else if (System.getGlobalVariableValueByName("tca.soz") && (zone == 8))
+			{
+				if (act == 0)
+					return stringformat("zone09_act1%s_tca", (image % 2 == 0) ? "a" : "b")
+			}
+		}
+	}
+	
+	else if (Mods.isModActive("sonic 3 1103 flying battery"))
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (zone == 7)
+				return stringformat("zone08_act2%s_lego1103", (image % 2 == 0) ? "a" : "b")
+		}
+		
+		else
+		{
+			if (zone == 7)
+				return stringformat((act == 0 ? "zone08_act1%s_lego1103" : "zone08_act2%s_lego1103"), (image % 2 == 0) ? "a" : "b")
+		}
+	}
+
+	else if (Mods.isModActive("UOZO Palettes"))
+	{
+		if System.getGlobalVariableValueByName("useottsOriginalZoneOrder.fbzPalettes") && (zone == 7)
+		{
+			if (act == 0 && image != 1) 
+				return "zone08_act1a_uozo"
+
+			else if (act == 1 && image == 1)
+				return (Game.getSetting(SETTING_ICZ_NIGHTTIME) ? "zone08_act2b_uozo_night" : "zone08_act2b_uozo_dawn")
+		}
+
+		else if System.getGlobalVariableValueByName("useottsOriginalZoneOrder.iczPalettes") && (zone == 4)
+		{
+			if (act == 0 && image == 1)
+				return "zone05_act1b_ozo"
+		}
+	}
+
+	return base.ActSelect.GetZonePreviewKey(zone, act, image)
+}

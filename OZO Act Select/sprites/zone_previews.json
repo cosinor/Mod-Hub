@@ -1,0 +1,40 @@
+{
+	"zone03_act2a_tca": { "File": "zone03_act2a_tca.bmp" },
+	"zone03_act2b_tca": { "File": "zone03_act2b_tca.bmp" },
+	"zone03_act2a_tca_fix": { "File": "zone03_act2a_tca_fix.bmp" },
+	"zone03_act2b_tca_fix": { "File": "zone03_act2b_tca_fix.bmp" },
+
+	"zone05_act1b_ozo": { "File": "zone05_act1b_ozo.bmp" },
+	"zone05_act1b_tca_knux": { "File": "zone05_act1b_tca_knux.bmp" },
+	"zone05_act2a_tca_knux": { "File": "zone05_act2a_tca_knux.bmp" },
+
+	"zone06_act1a_tca": { "File": "zone06_act1a_tca.bmp" },
+	"zone06_act1a_tca_knux": { "File": "zone06_act1a_tca_knux.bmp" },
+	"zone06_act1b_tca": { "File": "zone06_act1b_tca.bmp" },
+	"zone06_act2a_tca": { "File": "zone06_act2a_tca.bmp" },
+
+	"zone08_act1a_uozo": { "File": "zone08_act1a_uozo.bmp" },
+	"zone08_act2b_uozo_dawn": { "File": "zone08_act2b_uozo_dawn.bmp" },
+	"zone08_act2b_uozo_night": { "File": "zone08_act2b_uozo_night.bmp" },
+	"zone08_act1a_tca_star": { "File": "zone08_act1a_tca_star.bmp" },
+	"zone08_act1a_tca_cloud": { "File": "zone08_act1a_tca_cloud.bmp" },
+	"zone08_act2b_tca_dark": { "File": "zone08_act2b_tca_dark.bmp" },
+	"zone08_act2b_tca_light": { "File": "zone08_act2b_tca_light.bmp" },
+
+	"zone08_act1a_lego1103": { "File": "zone08_act1a_lego1103.png" },
+	"zone08_act1b_lego1103": { "File": "zone08_act1b_lego1103.png" },
+	"zone08_act2a_lego1103": { "File": "zone08_act2a_lego1103.png" },
+	"zone08_act2b_lego1103": { "File": "zone08_act2b_lego1103.png" },
+
+	"zone09_act1a_tca": { "File": "zone09_act1a_tca.bmp" },
+	"zone09_act1b_tca": { "File": "zone09_act1b_tca.bmp" },
+	"zone09_act1a_tca_knux": { "File": "zone09_act1a_tca_knux.bmp" },
+	"zone09_act1b_tca_knux": { "File": "zone09_act1b_tca_knux.bmp" },
+	"zone09_act1a_tca_knux_tweak": { "File": "zone09_act1a_tca_knux_tweak.bmp" },
+	"zone09_act1b_tca_knux_tweak": { "File": "zone09_act1b_tca_knux_tweak.bmp" },
+
+	"zone12_act1a_tca": { "File": "zone12_act1a_tca.png" },
+	"zone12_act1b_tca": { "File": "zone12_act1b_tca.png" },
+	"zone12_act1a_tca_pink": { "File": "zone12_act1a_tca_pink.png" },
+	"zone12_act1b_tca_pink": { "File": "zone12_act1b_tca_pink.png" }
+}
