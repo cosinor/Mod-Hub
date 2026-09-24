@@ -1,0 +1,47 @@
+{
+	"Metadata":
+	{
+		"Name": "New Battery Blues",
+		"UniqueID": "new-battery-blues",
+		"Author": "co$in0r, papertriangle",
+		"Description": "Choose the blue hue best for a flying battleship!",
+		"ModVersion": "3.3.6",
+	},
+
+	"OtherMods":
+	{
+		"time-consistent-adventure":
+		{
+			"Priority" : "Lower"
+		},
+
+		"useott-s-original-zone-order":
+		{
+			"Priority" : "Lower"
+		},
+		
+		"mrgrassman14-sonic-3-complete-level-select":
+		{
+			"Priority" : "Lower"
+		}
+	},
+
+	"Settings":
+	{
+		"List":
+		[
+			{
+				"InternalName": "FBZ.palettes",
+				"DisplayName": "Interior Style",
+				"Variable": "FBZ.palettes",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Steel Blue",
+					"1": "Royal Blue",
+					"2": "Sky Blue",
+				}
+			}
+		]
+	}
+}

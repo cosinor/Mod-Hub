@@ -1,0 +1,41 @@
+{
+	"Metadata":
+	{
+		"Name": "Faithful Logos",
+		"UniqueID": "new-air-logos",
+		"Author": "co$inor",
+		"Description": "Changes the Sonic 3 A.I.R logos to match the original game's credits and title screen logos.",
+		"ModVersion": "5/23/26",
+	},
+
+	"Settings":
+	{
+		"List":
+		[
+			{
+				"InternalName": "proto.style",
+				"DisplayName": "Subtitle Style",
+				"Variable": "proto.style",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Final Sonic 3",
+					"1": "Prototype Sonic 3",
+				}
+			},
+		]
+	},
+
+	"OtherMods":
+	{
+		"origins-resolution-title-screen":
+		{
+			"Priority" : "Lower"
+		},
+
+		"origins-resolution-title-screen":
+		{
+			"Priority" : "Lower"
+		}
+	}
+}

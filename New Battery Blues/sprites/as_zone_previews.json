@@ -1,0 +1,17 @@
+{
+	"zone08_act1b_royal": { "File": "zone08_act1b_royal.png" },
+	"zone08_act1b_sky": { "File": "zone08_act1b_sky.png" },
+	"zone08_act2a_steel": { "File": "zone08_act2a_steel.png" },
+	"zone08_act2a_royal": { "File": "zone08_act2a_royal.png" },
+	"zone08_act2a_sky": { "File": "zone08_act2a_sky.png" },
+
+	"zone08_act1a_lego1103_steel": { "File": "zone08_act1a_lego1103_steel.png" },
+	"zone08_act1b_lego1103_steel": { "File": "zone08_act1b_lego1103_steel.png" },
+	"zone08_act2a_lego1103_steel": { "File": "zone08_act2a_lego1103_steel.png" },
+	"zone08_act1a_lego1103_royal": { "File": "zone08_act1a_lego1103_royal.png" },
+	"zone08_act1b_lego1103_royal": { "File": "zone08_act1b_lego1103_royal.png" },
+	"zone08_act2a_lego1103_royal": { "File": "zone08_act2a_lego1103_royal.png" },
+	"zone08_act1a_lego1103_sky": { "File": "zone08_act1a_lego1103_sky.png" },
+	"zone08_act1b_lego1103_sky": { "File": "zone08_act1b_lego1103_sky.png" },
+	"zone08_act2a_lego1103_sky": { "File": "zone08_act2a_lego1103_sky.png" },
+}

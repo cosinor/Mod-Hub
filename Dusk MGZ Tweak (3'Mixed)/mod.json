@@ -1,0 +1,18 @@
+{
+	"Metadata":
+	{
+		"Name": "Dusk MGZ Tweak (3'Mixed)",
+		"UniqueID": "dusk-mgz-fix",
+		"Author": "co$inor",
+		"Description": "An addendum for haha_hollie's 3'Mixed dusk MGZ palette mod to make it accurate to the original fan game.",
+		"ModVersion": "5/27/26",
+	},
+
+	"OtherMods":
+	{
+		"time-consistent-adventure":
+		{
+			"Priority" : "Lower"
+		}
+	}
+}

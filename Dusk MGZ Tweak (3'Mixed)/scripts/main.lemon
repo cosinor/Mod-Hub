@@ -1,0 +1,10 @@
+
+function void yieldExecution()
+{
+	if Mods.isModActive("3'Mixed Dusk MGZ") && global.zone == 0x02
+	{
+		System.loadExternalRawData("3Mixed_Dusk_MGZ_Standalone", 0x0A8F5C)
+	}
+	
+	base.yieldExecution()
+}

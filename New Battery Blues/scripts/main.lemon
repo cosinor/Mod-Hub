@@ -1,0 +1,166 @@
+global s16 FBZ.palettes
+
+// FBZ Palettes 
+function void yieldExecution()
+{
+	if (FBZ.palettes == 0)
+	{
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz1_steelpalette" : "fbz1_steelpalette", 0x0a909c)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz2_steelpalette" : "fbz2_steelpalette", 0x0a90fc)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz_indoor_steelpalette" : "fbz_indoor_steelpalette", 0x052dc0)
+	}	
+
+	if (FBZ.palettes == 1)
+	{
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz1_royalpalette" : "fbz1_royalpalette", 0x0a909c)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz2_royalpalette" : "fbz2_royalpalette", 0x0a90fc)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz_indoor_royalpalette" : "fbz_indoor_royalpalette", 0x052dc0)
+	}
+
+	if (FBZ.palettes == 2)
+	{
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz1_skypalette" : "fbz1_skypalette", 0x0a909c)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz2_skypalette" : "fbz2_skypalette", 0x0a90fc)
+		System.loadExternalRawData(Mods.isModActive("sonic 3 1103 flying battery") ? "1103_fbz_indoor_skypalette" : "fbz_indoor_skypalette", 0x052dc0)
+	}
+	
+	if Mods.isModActive("sonic 3 1103 flying battery")
+		System.loadExternalRawData(FBZ.palettes == 0 ? "1103_fbz_outdoor_steelpalette" : FBZ.palettes == 1 ? "1103_fbz_outdoor_royalpalette" : "1103_fbz_outdoor_skypalette", 0x052dd0)
+		
+	if (Mods.isModActive("prototype styled fbz bg + night bg") && System.getGlobalVariableValueByName("config_bgtype") != 2)
+		u16[0x052dc4] = 0xeee
+	
+	base.yieldExecution()
+}
+
+// Data Select Portraits
+//# address-hook(0x00d96a) end(0x00d9f2)
+function void fn00d96a()
+{
+	string fbz_key
+	u16 posY = 0x10 + ((Mods.isModActive("Data Select Options") && Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x08 : 0x00)
+	
+	if Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.zone_icons") && System.getGlobalVariableValueByName("tca.fbz_s3_icon")
+		fbz_key = "fbz_portrait_s3_TCA"
+		
+	else if Mods.isModActive("Useott's Original Zone Order") && System.getGlobalVariableValueByName("useottsOriginalZoneOrder.FBZDataSelectPreview") == 1
+		fbz_key = "fbz_portrait_s3"
+	
+	if u16[A0 + 0x36] == 7 && s16[0xffffb04a + 0x2e] == 0 && Renderer.hasCustomSprite(fbz_key)
+	{
+		#if COSINOR_PORT_CUSTOMIZER_ACTIVE
+		{
+			cosinor.CustomPortraitPalette("portraits", (FBZ.palettes == 0 ? 0 : FBZ.palettes == 1 ? 1 : 2))
+			Renderer.drawSprite(fbz_key, (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, 0xa0 + (spc.pal_line - 1) * 0x10, SPRITE_FLAG_PRIO, 0x9ff9)
+		}
+	
+		#else
+		{
+			SpriteHandle dataselpreview = Renderer.addSpriteHandle(fbz_key, (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, 0x9ff9)		
+			dataselpreview.setFlags(SPRITE_FLAG_PRIO)
+			dataselpreview.setPalette("portraits", (FBZ.palettes == 0 ? 0 : FBZ.palettes == 1 ? 1 : 2))
+		}
+		#endif
+	}
+	
+	base.fn00d96a()
+}
+
+function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image)
+{
+	if (Mods.isModActive("OZO Act Select") && (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended")))
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (Mods.isModActive("sonic 3 1103 flying battery"))
+			{
+				if zone == 4 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act2a_lego1103_royal" : "zone08_act2a_lego1103_sky")
+			}
+
+			else
+			{
+				if zone == 4 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_steel" : FBZ.palettes == 1 ? "zone08_act2a_royal" : "zone08_act2a_sky")
+			}
+		}
+
+		else
+		{
+			if (Mods.isModActive("sonic 3 1103 flying battery"))
+			{
+				if zone == 4 && act == 0
+					return stringformat((FBZ.palettes == 0 ? "zone08_act1%s_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act1%s_lego1103_royal" : "zone08_act1%s_lego1103_sky"), (image % 2 == 0) ? "a" : "b")
+	
+				if zone == 4 && act == 1 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act2a_lego1103_royal" : "zone08_act2a_lego1103_sky")
+			}
+
+			else
+			{
+				if zone == 4 && act == 0 && image == 1 && !FBZ.palettes == 0
+					return (FBZ.palettes == 1 ? "zone08_act1b_royal" : "zone08_act1b_sky")
+	
+				if zone == 4 && act == 1 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_steel" : FBZ.palettes == 1 ? "zone08_act2a_royal" : "zone08_act2a_sky")
+			}
+		}
+	}
+
+	else
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (Mods.isModActive("sonic 3 1103 flying battery") && Mods.isModActive("OZO Act Select"))
+			{
+				if zone == 7 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act2a_lego1103_royal" : "zone08_act2a_lego1103_sky")
+			}
+
+			else
+			{
+				if zone == 7 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_steel" : FBZ.palettes == 1 ? "zone08_act2a_royal" : "zone08_act2a_sky")
+			}
+		}
+
+		else
+		{
+			if (Mods.isModActive("sonic 3 1103 flying battery") && Mods.isModActive("OZO Act Select"))
+			{
+				if zone == 7 && act == 0
+					return stringformat((FBZ.palettes == 0 ? "zone08_act1%s_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act1%s_lego1103_royal" : "zone08_act1%s_lego1103_sky"), (image % 2 == 0) ? "a" : "b")
+	
+				if zone == 7 && act == 1 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_lego1103_steel" : FBZ.palettes == 1 ? "zone08_act2a_lego1103_royal" : "zone08_act2a_lego1103_sky")
+			}
+
+			else
+			{
+				if zone == 7 && act == 0 && image == 1 && !FBZ.palettes == 0
+					return (FBZ.palettes == 1 ? "zone08_act1b_royal" : "zone08_act1b_sky")
+	
+				if zone == 7 && act == 1 && image != 1
+					return (FBZ.palettes == 0 ? "zone08_act2a_steel" : FBZ.palettes == 1 ? "zone08_act2a_royal" : "zone08_act2a_sky")
+			}
+		}
+	}
+
+	return base.ActSelect.GetZonePreviewKey(zone, act, image)
+}
+
+// S3C LS+ Compatibility
+function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue)
+{
+	if (!Mods.isModActive("Time Consistent Adventure") && key == "S3CompleteSelect_Zone8_alt") && (FBZ.palettes != 2)
+	{
+		key = (FBZ.palettes == 0 ? "S3CompleteSelect_FBZ_S3_Steel" : "S3CompleteSelect_FBZ_S3_Royal")
+	}
+	
+	else if (Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.fbz_s3_icon") && (key == "S3CompleteSelect_Zone8" || key == "S3CompleteSelect_Zone8_alt"))
+	{
+		key = (FBZ.palettes == 0 ? "S3CompleteSelect_FBZ_S3_Steel_TCA" : FBZ.palettes == 1 ? "S3CompleteSelect_FBZ_S3_Royal_TCA" : "S3CompleteSelect_FBZ_S3_Sky_TCA")
+	}
+	
+	base.Renderer.drawSprite(key, px, py, atex, flags, renderQueue)
+}

@@ -1,0 +1,505 @@
+global bool spc.new_hcz
+global bool spc.old_fbz
+global bool spc.old_lrz
+global bool spc.old_dez
+global bool spc.silly
+
+global u16 spc.pal_line
+global bool spc.fading
+
+#define COSINOR_PORT_CUSTOMIZER_ACTIVE = true
+
+//# address-hook(0x00d96a) end(0x00d9f2)
+function void fn00d96a()
+{
+	s16 slotIsActive = (s16[0xffffb04a + 0x2e] == 0)
+	
+	string card
+	u16 posX = (u16[A0 + 0x12] - camera.foreground.x.u16) - 168
+	u16 posY = (Mods.isModActive("Data Select Options") && (Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x18 : 0x10)	
+	u16 atex = 0x30
+	
+	u8 shownImage = u16[A0 + 0x36]
+	u8 defaultImage = objA0.value3a
+	u8 playthroughStatus = objA0.value3b
+	u8 slotnum = max(s16(u16[A0 + 0x34] - 1), 0) // Character selection AFTER kte & Tails	
+	u16 chars = u16[A0 + 0x34]
+
+	bool ecf_slot = false
+	#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+		if ECF_dataselect_getStr()
+			ecf_slot = true
+	#endif
+
+	if (slotIsActive)
+	{
+		if !(shownImage == defaultImage && playthroughStatus != 0) // Base Zone Portraits
+		{	
+			card = stringformat("zoneCard_%d", shownImage)
+			
+			if (spc.new_hcz && shownImage == 0x01)
+			{
+				card = "new_hcz"
+				atex = 0xa0 + (spc.pal_line - 1) * 0x10
+				cosinor.CustomPortraitPalette("custom_portraits", 1)
+			}
+			
+			else if (spc.old_fbz && shownImage == 0x07)
+			{
+				card = "old_fbz"
+				atex = 0xa0 + (spc.pal_line - 1) * 0x10
+				cosinor.CustomPortraitPalette("custom_portraits", 2)
+			}
+
+			if !(Mods.isModActive("November Seasons") && System.getGlobalVariableValueByName("nvs.dsp"))
+			{
+				if (spc.old_lrz && shownImage == 0x09)
+					card = "old_lrz"
+					
+				else if (spc.old_dez && shownImage == 0x0c)
+					card = "old_dez"
+			}
+		}
+		
+		else if (slotnum < 4 && !ecf_slot) // Base Clear Portraits
+		{
+			if (chars <= CHARS_SONIC_ALONE)
+				card = (objA0.animation.frame == 0x18 ? "clearCard_sonic" : objA0.animation.frame == 0x19 ? "clearCard_sonic_super" : 0)
+												
+			if (objA0.animation.frame == 0x23)
+			{
+				if (chars == CHARS_TAILS_ALONE)
+				{
+					card = (playthroughStatus == 1 ? (spc.silly ? "clearCard_tails_silly" : "clearCard_tails") : playthroughStatus == 2 ? "clearCard_tails_super" : 0)
+					
+					if (spc.silly == 2 && playthroughStatus == 1)
+					{
+						atex = 0xa0 + (spc.pal_line - 1) * 0x10
+						cosinor.CustomPortraitPalette("custom_portraits", 0)
+					}
+				}
+							
+				else
+					card = (playthroughStatus == 1 ? "clearCard_kte" : playthroughStatus == 2 ? "clearCard_kte_super" : 0)
+			}
+					
+			if (objA0.animation.frame == 0x1b)
+				card = "clearCard_best"
+		}
+	}
+	
+	if Renderer.hasCustomSprite(card)
+		Renderer.drawSprite(card, posX, posY, atex, SPRITE_FLAG_PRIO, 0x9ff9 - 1)
+		
+	if (spc.fading)
+	{
+		u32 fadeAdress = (!level.framecounter.low ? 0xfffffce0 : 0xfffffc60) // Controls when the palette fades
+		if (shownImage == defaultImage && playthroughStatus != 0)
+		{
+			#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+				objA0.value26 = playthroughStatus
+			#endif
+		
+			if (chars <= CHARS_SONIC_ALONE || playthroughStatus == 3)
+			{
+				A2 = 0x00cab8 + (playthroughStatus - 1) * 32
+				copyMemory(fadeAdress, A2, 0x20)
+				return
+			}
+
+			D1 = (chars >= CHARS_KNUCKLES_ALONE) ? 0x0e : 0x10
+			if (playthroughStatus != 1)
+			{
+				++D1.u16
+			}
+
+			D2.u16 = 0xa380
+		}
+		
+		else
+		{
+			D2.u16 = 0xb740
+			objA0.value26 = 0
+		}
+
+		u32 backupA1 = A1
+		u16 backupD1 = D1.u16
+		D1 = 0xffff0000 + (u32(D1.u16) * 0x08c0)
+		updateSpritePattern(D1, D2.u16, 0x0460)
+		A1 = backupA1
+
+		A2 = 0x00cb18 + backupD1 * 32
+		copyMemory(fadeAdress, A2, 0x20)
+	}
+	
+	else
+		base.fn00d96a()
+}
+
+function bool fn00d458()
+{	
+	#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE		
+		string ecf_name = ECF_dataselect_getStr()
+		string ecf_id = ECF_dataselect_getNum()
+	#endif
+	
+	if (spc.fading)
+	{
+		if (u8[A1] & 0x80)
+		{
+			// Empty save slot
+			objA0.compound.sprite1.animation.sprite = 0x0f
+			objA0.animation.frame = 0
+			if (u16[0xffffb04a + 0x2e] != 0 || u16[0xffffeee4] != 0)
+			{
+				return 2
+			}
+			else
+			{
+				return 1
+			}
+		}
+		else
+		{
+			// Used save slot
+			D1.u16 = u16[A0 + 0x36]
+			fn00d96a()
+
+			objA0.animation.frame = 0x17
+			D1.u16 = u16[A0 + 0x36]
+			if (D1.u8 == objA0.value3a && objA0.value3b != 0)
+			{
+				// This gets entered only for completed games
+				if (objA0.value3b == 1)
+				{
+					++objA0.animation.frame
+				}
+				else if (objA0.value3b == 2)
+				{
+					objA0.animation.frame += 2
+				}
+				else
+				{
+					objA0.animation.frame += 4
+				}
+
+				if (objA0.value3b == 1 || objA0.value3b == 2)
+				{
+					if (u16[A0 + 0x34] >= CHARS_TAILS_ALONE)	// It feels strange that this is the same for Tails and Knuckles
+					{
+						objA0.animation.frame = 0x23
+					}
+				}
+			}
+			
+			#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+			if (ecf_name && ecf_id == 0)
+			{
+				if (control.pad1.pressed & DataSelect.CONTROLS_ACCEPT)
+					playSound(0xb2)
+				return 2
+			}
+			#endif
+
+			if (u16[A0 + 0x38] == 0 && objA0.value3b == 0)
+			{
+				if (u16[0xffffb04a + 0x2e] != 0)
+				{
+					return 2
+				}
+
+				objA0.compound.sprite1.animation.sprite = 0
+			}
+			else
+			{
+				if (u16[A0 + 0x38] == 0)
+				{
+					objA0.flags38 = 0xff
+				}
+
+				if (u16[0xffffb04a + 0x2e] != 0)
+				{
+					return 2
+				}
+
+				if (u16[0xffffeee4] != 0)
+				{
+					objA0.compound.sprite1.animation.sprite = 0
+					objA0.compound.count = 2
+					return 2
+				}
+
+				if (u16[A0 + 0x34] >= CHARS_KNUCKLES_ALONE)		// Originally this is only an equality check
+				{
+					D6 = 0x0b
+				}
+				#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+				else if (u16[A0 + 0x34] == CHARS_TAILS_ALONE || objA0.value3b < 2 || ecf_name && !ECF_visitsDoomsday(ecf_name))
+				{
+					D6 = 0x0c
+				}
+				#endif
+				#if EXTRA_CHARACTERS_UNLIMITED
+				else if (u16[A0 + 0x34] == CHARS_TAILS_ALONE || objA0.value3b < 2 || (Mods.isModActive("Extra Slot Mighty") || Mods.isModActive("Extra Slot Mighty SHC")) && System.getGlobalVariableValueByName("MightyDDZ") == 0x01)
+				{
+					D6 = 0x0c
+				}
+				#endif
+				else if (u16[A0 + 0x34] == CHARS_TAILS_ALONE || objA0.value3b < 2)
+				{
+					D6 = 0x0c
+				}
+				else
+				{
+					D6 = 0x0d
+				}
+
+				D1.u16 = u16[A0 + 0x36]
+				
+				if (level.framecounter.low) // Halts movement until the menu framecounter is active.
+				{
+					if (control.pad1.pressed & CONTROL_DOWN)
+					{
+						playSound(SFX_CLICK)
+						--D1.u16
+					#if STANDALONE
+						if (D1.s16 < 0 || D1.s16 > D6.u16)	// Fixes that you could select zones that aren't selectable for the character (like DDZ for Knuckles); #contributed by AtomicRey
+					#endif
+						{
+							D1.u16 = D6.u16
+						}
+						
+						// safety check for "corrupted" files
+						#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE		
+							if (D1.u16 == 0xd && ecf_name && !ECF_visitsDoomsday(ecf_name))
+								--D1.u16
+						#endif
+					}
+
+					else if (control.pad1.pressed & CONTROL_UP)
+					{
+						playSound(SFX_CLICK)
+						++D1.u16
+						if (D1.u16 > D6.u16)
+						{
+							D1 = 0
+						}
+					}
+				}
+
+				u16[A0 + 0x36] = D1.u16
+				objA0.compound.sprite1.animation.sprite = (level.framecounter.low & 0x10) ? 0x1a : 0
+			}
+
+			objA0.compound.count = 2
+			if (u16[0xffffeee4] != 0)
+			{
+				return 2
+			}
+			if ((control.pad1.pressed & DataSelect.CONTROLS_ACCEPT) == 0)
+			{
+				return 2
+			}
+
+			level.giantrings_clear.u16 = u16[A1 + 0x04]
+			if (objA0.value3b == 0)
+			{
+				D0.u8 = u8[A1 + 0x03]
+			}
+			else
+			{
+				D0.u16 = u16[A0 + 0x36]
+				if (D0.u8 >= objA0.value3a)
+				{
+					return 2
+				}
+				level.giantrings_clear = 0
+			}
+			fn00da4e()
+
+			global.zone_act = D0.u16
+			global.zone_act.apparent = D0.u16
+			levelselect.characters  = (u8[A1 + 0x02] >> 4)
+			
+			#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+				global_ExChar_num[0] = ecf_id
+				global_ExChar_str[0] = getECFCharNameAtId(global_ExChar_num[0])
+				if (ecf_name)
+					u8[A1 + 0x02] = getECFGlobalCharId(global_ExChar_str[0]) << 4
+			#endif
+			
+			//debugLog(u8[A1 + 0x02])
+			global.next_bluespheres = (u8[A1 + 0x02] & 0x0f)
+
+			D0 = u16[A1 + 0x06]
+			A2 = 0xffffffb2		// Start of emerald collection states
+			fn00da1e()
+			global.chaos_emeralds = D1.u8
+			global.super_emeralds = D2.u8
+		#if STANDALONE
+			global.game_random_base = u8[A1 + 0x01]
+			if (global.game_random_base == 0)
+			{
+				// Intentionally not using the (more deterministic) "getRandomNumber" here
+				global.game_random_base = 1 + (System.rand() % 0xff)		// Avoid the 0 value
+			}
+		#endif
+
+			global.active_saveslot = A1
+			DataSelect.SharedGameSlotContinue()
+
+			D0.u8 = u8[A1 + 0x08]
+			if ((D0.u8 == 0) || (D0.u8 < 3 && u8[A1 + 0x09] == 0))
+			{
+				u8[A1 + 0x08] = 3
+				if (u8[A1 + 0x09] > 0)
+					--u8[A1 + 0x09]
+			}
+
+			lives_counter = u8[A1 + 0x08]
+			continues_counter = u8[A1 + 0x09]
+
+		#if STANDALONE
+			if (continues_counter >= 5)
+			{
+				Game.setAchievementComplete(ACHIEVEMENT_CONTINUES)
+			}
+
+			// Load additional data
+			u32 slotIndex = (A1 - 0xffffe6ac) / 0x0a
+			u32 address = 0x801100 + slotIndex * 0x20
+			if (u8[A1] == 0)
+			{
+				// Load score, but only for non-completed games
+				player.score = u32[address]
+				player.next_life_score = (player.score / 5000 + 1) * 5000
+			}
+		#endif
+
+			sram.block_interrupts.u8 = 0xff
+			SaveGameSlot()
+
+			global.game_mode = 0x0c			// Main Game
+			DrawObject()
+			return 0
+		}
+	}
+	
+	else return base.fn00d458()
+}
+
+//# address-hook(0x00d1fa) end(0x00d30a)
+function void fn00d1fa()
+{
+	if !(!level.framecounter.low && spc.fading) // Prevents left and right movement before level framecounter starts.
+		base.fn00d1fa()
+}
+
+// Extended palette line for portraits with custom palettes
+function void cosinor.CustomPortraitPalette(u64 src, u8 line)
+{
+	u16 offset = 3 * 0x40 + (spc.pal_line - 1) * 0x20
+	u32 DestAD = (spc.fading && !level.framecounter.low ? 0x802180 : 0x802000) + offset
+	
+	u32 numColors = System.loadExternalPaletteData(src, line, 0x800000, 0x10)
+
+	for (u32 i = 0; i < numColors; i ++)
+	{
+		u32 rgba = u32[0x800000 + i * 4]
+		
+		if (rgba & 0xff000000)
+			u16[DestAD + 2 * i] = packColorExt(rgba)
+	}
+}
+
+// Re-render Save Slot Arrows to Appear Above Custom Portraits
+function bool Standalone.onDrawVdpSpriteCompound(s16 px, s16 py, u8 size, u16 index, u16 renderQueue, u8 spriteCounter)
+{
+	if (objA0.update_address == 0x00d42c) && (index == 0x83bd || index == 0x93bd)
+	{
+		Renderer.drawVdpSprite(px, py, size, index, 0x9ffa)
+		return true
+	}
+	
+	return base.Standalone.onDrawVdpSpriteCompound(px, py, size, index, renderQueue, spriteCounter)
+}
+
+// Remove Base Save Slot Portraits + Add EC Clear Portraits so They Don't Dissapear
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	u8 slotnum = max(s16(u16[A0 + 0x34] - 1), 0) // Character selection AFTER kte & Tails	
+
+	if (objA0.update_address == 0x00d42c && objA0.compound.count >= 2)
+	{
+		if !(Mods.isModActive("Data Select Options") && System.getGlobalVariableValueByName("lsds.nodetail"))
+		{
+			#if EXTRA_CHARACTER_FRAMEWORK_ACTIVE
+				if (objA0.update_address == 0x00d30c || objA0.update_address == 0x00d42c)
+				{
+					string name = ECF_dataselect_getStr()
+					string id = ECF_dataselect_getNum()
+
+					if (name)
+					{
+						ECF_drawCharSelectSpr(name, id, px, py - 20, renderQueue)
+						if (objA0.update_address == 0x00d42c && u8[u32[A0 + 0x30]] != 0x80 && u8[A0 + 0x1d] < 0x1d && u8[A0 + 0x1d] != 0x0f)
+							ECF_drawCharSelectSprIcons(name, id, px, py, renderQueue)
+						objA0.animation.sprite = 0
+						
+						if (objA0.compound.count >= 2 && objA0.value26 && objA0.update_address == 0x00d42c)
+						{
+							u64 key = stringformat("saveimage_%s_%d", name, objA0.value26)
+							if (!Renderer.hasCustomSprite(key))
+								key = "saveimage_unknown"
+								
+							SpriteHandle zone = Renderer.addSpriteHandle(key, px, py - 120, renderQueue)
+							zone.setFlags(SPRITE_FLAG_PRIO)
+							zone.setPaletteOffset(0x30)
+							objA0.compound.count = 1
+							return false
+						}
+					}
+				}
+			#endif
+			
+			#if MISC_ACTIVE
+				if (slotnum > 3)
+				{
+					if (objA0.update_address == 0x00d42c && objA0.animation.frame != 0x17 && u8[A0 + 0x38] == 0xff && u16[0xffffb04a + 0x30] == 0)
+					{
+						px = (objA0.position.x.u16 - 0xa8) + 40
+						string key = MISC.getClearPortrait(objA0.value3b, slotnum)
+						objA0.compound.count = 1
+						if (Renderer.hasCustomSprite(key))
+						{
+							MISC.drawPortraitSprite(key, px, py, 0x00, SPRITE_FLAG_PRIO, renderQueue - 1, slotnum)
+							u8[A0 + 0x23] = 0
+						}
+					}
+				}
+			#endif
+		}
+	
+		objA0.compound.count = 1
+	}
+
+	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
+// S3C LS+ Custom Portraits
+function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue)
+{
+	if (spc.new_hcz && key == "S3CompleteSelect_Zone2")
+		key = "S3CIcon_Zone2_New"
+	
+	if !(Mods.isModActive("November Seasons") && System.getGlobalVariableValueByName("nvs.dsp"))
+	{
+		if (spc.old_lrz && key == "S3CompleteSelect_Zone10")
+			key = "S3CIcon_Zone10_Old"
+
+		else if (spc.old_dez && key == "S3CompleteSelect_Zone13")
+			key = "S3CIcon_Zone13_Old"
+	}
+	
+	base.Renderer.drawSprite(key, px, py, atex, flags, renderQueue)
+}

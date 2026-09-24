@@ -1,0 +1,10 @@
+{
+	"fbz_portrait_s3": { "File": "datasel_fbz_s3a.bmp", "Rect": "0,0,80,56"},
+	"fbz_portrait_s3_TCA": { "File": "datasel_fbz_s3a_tca.bmp", "Rect": "0,0,80,56"},
+
+	"S3CompleteSelect_FBZ_S3_Steel": { "File": "fbz_icon_s3_steel.png"},
+	"S3CompleteSelect_FBZ_S3_Steel_TCA": { "File": "fbz_icon_s3_steel_tca.png"},
+	"S3CompleteSelect_FBZ_S3_Royal": { "File": "fbz_icon_s3_royal.png"},
+	"S3CompleteSelect_FBZ_S3_Royal_TCA": { "File": "fbz_icon_s3_royal_tca.png"},
+	"S3CompleteSelect_FBZ_S3_Sky_TCA": { "File": "fbz_icon_s3_sky_tca.png"},
+}

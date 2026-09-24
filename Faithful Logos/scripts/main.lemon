@@ -1,0 +1,53 @@
+global bool proto.style
+
+//# address-hook(0x0048dc) end(0x0048fe)
+function void fn0048dc()
+{
+	u16 px = getScreenWidth() / 2
+	u16 py = objA0.position.y.u16 - 53
+
+	if Mods.isModActive("origins-resolution-title-screen")
+	{
+		if (proto.style)
+		{
+			if System.getGlobalVariableValueByName("orts.title_type") 
+				Renderer.drawCustomSprite("1103_sonic_the_hedgehog_orts", px, py + 1, 0x30, SPRITE_FLAG_PRIO, 0xa000)
+
+			else if !System.getGlobalVariableValueByName("orts.title_type") 
+				Renderer.drawCustomSprite("title_screen_air_p", px, py, 0x00, SPRITE_FLAG_PRIO, 0xa000)
+		}
+		
+		else
+		{
+			if !System.getGlobalVariableValueByName("orts.title_type") 
+				Renderer.drawCustomSprite("title_screen_air", px, py, 0x00, SPRITE_FLAG_PRIO, 0xa000)
+		}
+	}
+
+	else if Mods.isModActive("Sonic 3 Title Screen Experience")
+	{
+		// Clear "Sonic The Hedgehog" text in VRAM
+		if System.getGlobalVariableValueByName("NameText") == 0
+		{
+			for (u16 x = 0xb000; x < 0xb700; x += 0x80)
+				for (u16 y = 0; y < 0x40; y += 2)
+					setVRAM(x + y, 0)
+		}	
+
+		if (proto.style) && System.getGlobalVariableValueByName("NameText") != 0
+			Renderer.drawCustomSprite("1103_sonic_the_hedgehog", px, py, 0x30, SPRITE_FLAG_PRIO, 0xa000)
+
+		else if (proto.style) && System.getGlobalVariableValueByName("NameText") == 0
+			Renderer.drawCustomSprite("title_screen_air_p", px, py, 0x00, SPRITE_FLAG_PRIO, 0xa000)
+	}
+
+	else
+	{
+		if (proto.style)
+			Renderer.drawCustomSprite("title_screen_air_p", px, py, 0x00, SPRITE_FLAG_PRIO, 0xa000)
+		else
+			Renderer.drawCustomSprite("title_screen_air", px, py, 0x00, SPRITE_FLAG_PRIO, 0xa000)
+	}
+
+	base.fn0048dc()
+}

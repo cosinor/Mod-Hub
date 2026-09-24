@@ -1,0 +1,161 @@
+{
+	"Metadata":
+	{
+		"Name": "Customizable Save Portraits",
+		"UniqueID": "co$in0r-portrait-customizer",
+		"Author": "co$in0r, Useott",
+		"Description": "This mod is about 5-6 years late.",
+		"ModVersion": "20/9/26"
+	},
+	
+	"OtherMods":
+	{
+		"data-select-options":
+		{
+			"Priority": "Higher"
+		},
+		
+		"time-consistent-adventure":
+		{
+			"Priority": "Higher"
+		},
+		
+		"useott-s-original-zone-order":
+		{
+			"Priority" : "Higher"
+		},
+		
+		"november-seasons":
+		{
+			"Priority": "Higher"
+		},
+		
+		"extra-character-framework":
+		{
+			"Priority": "Lower"
+		},
+		
+		"AmyGaloreMisc":
+		{
+			"Priority": "Lower"
+		},
+		
+		"MetalMadnessMISC":
+		{
+			"Priority": "Lower"
+		},
+		
+		"extra-character-slots-unlimited":
+		{
+			"Priority": "Lower"
+		},
+		
+		"left-shifted-data-select":
+		{
+			"Priority": "Lower"
+		},
+	},
+	
+	"Settings":
+	{
+		"List":
+		[
+			{
+				"InternalName": "spc.fading",
+				"DisplayName": "Portrait Palettes Fade In",
+				"Variable": "spc.fading",
+				"Category": "General",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+		
+			{
+				"InternalName": "spc.pal_line",
+				"DisplayName": "Custom Palette Line",
+				"Variable": "spc.pal_line",
+				"Category": "General",
+				"DefaultValue": "6",
+				"Options":
+				{
+					"1": "10",
+					"2": "11",
+					"3": "12",
+					"4": "13",
+					"5": "14",
+					"6": "15",
+				}
+			},
+			
+			{
+				"InternalName": "spc.silly",
+				"DisplayName": "Silly Tails Completion",
+				"Variable": "spc.silly",
+				"Category": "Example Portraits",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+					"2": "Enabled (Custom Palette)",
+				}
+			},
+			
+			{
+				"InternalName": "spc.new_hcz",
+				"DisplayName": "Custom Hydrocity Portrait",
+				"Variable": "spc.new_hcz",
+				"Category": "Example Portraits",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+			
+			{
+				"InternalName": "spc.old_fbz",
+				"DisplayName": "Unused S3A Flying Battery",
+				"Variable": "spc.old_fbz",
+				"Category": "Example Portraits",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+			
+			{
+				"InternalName": "spc.old_lrz",
+				"DisplayName": "Unused 408 Lava Reef",
+				"Variable": "spc.old_lrz",
+				"Category": "Example Portraits",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+			
+			{
+				"InternalName": "spc.old_dez",
+				"DisplayName": "Unused 408 Death Egg",
+				"Variable": "spc.old_dez",
+				"Category": "Example Portraits",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			}
+		]
+	}
+}
+

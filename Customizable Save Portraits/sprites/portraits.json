@@ -1,0 +1,35 @@
+{
+	//Base Zone Cards
+	"zoneCard_0":  { "File": "0.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_1":  { "File": "1.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_2":  { "File": "2.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_3":  { "File": "3.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_4":  { "File": "4.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_5":  { "File": "5.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_6":  { "File": "6.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_7":  { "File": "7.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_8":  { "File": "8.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_9":  { "File": "9.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_10":  { "File": "10.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_11":  { "File": "11.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_12":  { "File": "12.bmp", "Rect": "0,0,80,56" },
+	"zoneCard_13":  { "File": "13.bmp", "Rect": "0,0,80,56" },
+	
+	//Example Zone Cards
+	"new_hcz": { "File": "new_hcz.bmp", "Rect": "0,0,80,56" },
+	"old_fbz":  { "File": "old_fbz.bmp", "Rect": "0,0,80,56" },
+	"old_lrz":  { "File": "old_lrz.bmp", "Rect": "0,0,80,56" },
+	"old_dez":  { "File": "old_dez.bmp", "Rect": "0,0,80,56" },
+	
+	//Base Clear Cards
+	"clearCard_sonic":  { "File": "sonic.bmp", "Rect": "0,0,80,56" },
+	"clearCard_sonic_super":  { "File": "sonic_super.bmp", "Rect": "0,0,80,56" },
+	"clearCard_tails":  { "File": "tails.bmp", "Rect": "0,0,80,56" },
+	"clearCard_tails_super":  { "File": "tails_super.bmp", "Rect": "0,0,80,56" },
+	"clearCard_kte":  { "File": "kte.bmp", "Rect": "0,0,80,56" },
+	"clearCard_kte_super":  { "File": "kte_super.bmp", "Rect": "0,0,80,56" },
+	"clearCard_best":  { "File": "best.bmp", "Rect": "0,0,80,56" },
+	
+	//Example Clear Cards
+	"clearCard_tails_silly":  { "File": "tails_silly.bmp", "Rect": "0,0,80,56" },
+}

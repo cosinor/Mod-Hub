@@ -1,0 +1,7 @@
+{
+	"title_screen_air_p": { "File": "title_screen.png", "Rect": "0,0,152,12", "Center": "76,9" },
+	"title_screen_air": { "File": "title_screen.png", "Rect": "0,22,152,12", "Center": "76,9" },
+	"title_screen_air_h": { "File": "title_screen.png", "Rect": "0,11,152,12", "Center": "76,9" },
+	"1103_sonic_the_hedgehog_orts":  { "File": "1103_sonic_the_hedgehog.png", "Rect": "0,0,112,10", "Center": "56,9" },
+	"1103_sonic_the_hedgehog":  { "File": "1103_sonic_the_hedgehog.png", "Rect": "0,11,112,10", "Center": "56,9" },
+}

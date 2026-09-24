@@ -1,0 +1,29 @@
+{
+	"fbz1_steelpalette": { "File": "FBZ_Steel.bin" },
+	"fbz2_steelpalette": { "File": "FBZ_Steel.bin" },
+	"fbz_indoor_steelpalette": { "File": "FBZIndoors_Steel.bin" },
+        
+	"fbz1_royalpalette": { "File": "FBZ_Royal.bin" },
+	"fbz2_royalpalette": { "File": "FBZ_Royal.bin" },
+	"fbz_indoor_royalpalette": { "File": "FBZIndoors_Royal.bin" },
+	
+	"fbz1_skypalette": { "File": "FBZ_Sky.bin" },
+	"fbz2_skypalette": { "File": "FBZ_Sky.bin" },
+	"fbz_indoor_skypalette": { "File": "FBZIndoors_Sky.bin" },
+
+	//lego 1103 FBZ compatibility
+	"1103_fbz1_steelpalette": { "File": "1103_FBZ_Steel.bin" },
+	"1103_fbz2_steelpalette": { "File": "1103_FBZ_Steel.bin" },
+	"1103_fbz_indoor_steelpalette": { "File": "1103_FBZIndoors_Steel.bin" },
+	"1103_fbz_outdoor_steelpalette": { "File": "1103_FBZOutdoors_Steel.bin" },
+
+        "1103_fbz1_royalpalette": { "File": "1103_FBZ_Royal.bin" },
+	"1103_fbz2_royalpalette": { "File": "1103_FBZ_Royal.bin" },
+	"1103_fbz_indoor_royalpalette": { "File": "1103_FBZIndoors_Royal.bin" },
+	"1103_fbz_outdoor_royalpalette": { "File": "1103_FBZOutdoors_Royal.bin" },
+
+	"1103_fbz1_skypalette": { "File": "1103_FBZ_Sky.bin" },
+	"1103_fbz2_skypalette": { "File": "1103_FBZ_Sky.bin" },
+	"1103_fbz_indoor_skypalette": { "File": "1103_FBZIndoors_Sky.bin" },
+	"1103_fbz_outdoor_skypalette": { "File": "1103_FBZOutdoors_Sky.bin" } 
+}
