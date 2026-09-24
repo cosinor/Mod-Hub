@@ -1,2 +1,2 @@
 # Mod-Hub
-This is where is host my stuff for you to freely download or study the code of. 
+This is where is host my stuff for you to freely download or study the code of. Do not sell any of these mods or their assets commercially.
