@@ -1,0 +1,514 @@
+global bool nvs.lbz
+global bool nvs.mhz
+global bool nvs.lrz_hpz
+global bool nvs.bpz
+
+global bool nvs.bsk
+global bool nvs.lbz1_egg
+global bool nvs.lbz2_fgc
+global bool nvs.mhz1_grnd
+global bool nvs.mhz2_ssn
+global bool nvs.lrz_bnk
+
+global u16 fade_state = 0
+global u16 fade_time = 0
+
+global bool nvs.dsp
+global u16 nvs.em_line
+
+// TCA Compatibility Functions
+function bool isKnucklesRoute()
+{
+	if (global.characters == CHARS_KNUCKLES_ALONE)
+		return true
+	else if (global.characters > CHARS_KNUCKLES_ALONE) && MISC.getAllowedZones(global.characters) == 0x0b
+		return true
+		
+	return false
+}
+
+// What route is the character on?
+function u8 MISC.getAllowedZones(u8 slotnum)
+{
+    // add exceptions for your individual character like this:
+    // if (slotnum == CHARACTER_CUSTOM)
+    //    return 0x0d
+	// 
+	// for reference:
+	// 0x0d - Sonic zones (includes doomsday)
+	// 0x0c - Tails zones (excludes doomsday)
+	// 0x0b - Knux zones (ends at ssz)
+
+	return base.MISC.getAllowedZones(slotnum)
+}
+
+// Zone Palettes
+function void yieldExecution()
+{	
+	if ((nvs.bsk) && (global.zone == 1))
+	{
+		System.loadExternalRawData("1103_big_shaker_palette", 0x6ae56)
+		System.loadExternalRawData("1103_big_shaker_damage_palette", 0x6acd8)
+	}
+
+	if (nvs.lbz && global.zone == 6)
+	{
+		System.loadExternalRawData("1103_lbz1_palette", 0xa929c)
+		System.loadExternalRawData("1103_lbz2_palette", 0xa92fc)
+		System.loadExternalRawData("1103_lbz2_water_palette", 0xa935c)
+
+		if (!nvs.lbz2_fgc)
+		{	
+			if (global.act == 0x01 || level.restart)
+			{
+				fade_state = 0
+			}
+		
+			if ((level.wait_for_results) != 0 && fade_state == 0)
+			{
+				fade_state = 1
+				fade_time = 0
+			}
+			
+			if (fade_state == 1 && fade_time <= 0x78 && (!global.game.paused))
+			{			
+				fade_time += 3
+				if (fade_time % 24 == 0)
+				{
+					for (u8 i = 0; i < 31; i++)
+					{
+						u16[0xfffffc00 + (0x21 + i)*2] = blendColorsPacked(u16[0xa929c + (0x11 + i)*2], u16[0xa92fc + (0x11 + i)*2], min(256, fade_time * 2 + fade_time / 8 + 1))
+					}
+				}
+			}
+		}
+
+		if (nvs.lbz1_egg)
+		{	
+			System.loadExternalRawData("1103_lbz1_rusty_palette", 0xa929c)
+		}
+
+		if (nvs.lbz2_fgc)
+		{
+			System.loadExternalRawData("1103_lbz2_gold_palette", 0xa92fc)
+		}
+	}
+
+	if (nvs.mhz && global.zone == 7)
+	{
+		System.loadExternalRawData("1103_mhz1_palette", 0xa943c)
+		if (nvs.mhz1_grnd)
+		{
+			System.loadExternalRawData("1103_mhz1_complete_palette", 0xa943c)
+		}
+		
+		if (nvs.mhz2_ssn)
+		{
+			if (nvs.mhz1_grnd)
+			{
+				System.loadExternalRawData("1103_mhz2_autumn_complete_palette", 0xa949c)
+				System.loadExternalRawData("1103_mhz2_winter_complete_palette", 0x550fe)
+			}
+
+			else
+			{
+				System.loadExternalRawData("1103_mhz2_autumn_palette", 0xa949c)
+				System.loadExternalRawData("1103_mhz2_winter_palette", 0x550fe)
+			}
+		}
+
+		if (Mods.isModActive("Time Consistent Adventure") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("UOZO Palettes"))
+		{
+			if (nvs.mhz1_grnd)
+			{
+				if (!isKnucklesRoute() && System.getGlobalVariableValueByName("tca.mvz") && System.getGlobalVariableValueByName("tca.intended") && global.act == 0x01 && camera.position.x.u16 > 0x3ae5 - getScreenExtend())
+				{
+					System.loadExternalRawData("1103_mhz2_sunset_boss_complete_palette_tca/uozo", 0xa943c)
+				}
+				
+				if (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.mhzSunsetPalette") == 1 && global.act == 0x01 && camera.position.x.u16 > 0x3abd)
+				{
+					System.loadExternalRawData("1103_mhz2_sunset_boss_complete_palette_tca/uozo", 0xa943c)
+				}
+			}
+
+			else
+			{
+				if (!isKnucklesRoute() && System.getGlobalVariableValueByName("tca.mvz") && System.getGlobalVariableValueByName("tca.intended") && global.act == 0x01 && camera.position.x.u16 > 0x3ae5 - getScreenExtend())
+				{
+					System.loadExternalRawData("1103_mhz2_sunset_boss_palette_tca/uozo", 0xa943c)
+				}
+				
+				if (System.getGlobalVariableValueByName("useottsOriginalZoneOrder.mhzSunsetPalette") == 1 && global.act == 0x01 && camera.position.x.u16 > 0x3abd)
+				{
+					System.loadExternalRawData("1103_mhz2_sunset_boss_palette_tca/uozo", 0xa943c)
+				}
+			}
+		}
+	}
+
+	if (nvs.lrz_hpz)
+	{
+		if (global.zone == 9)
+		{
+			//1103 LRZ1
+			System.loadExternalRawData("1103_lrz1_palette_cycle", 0x3322)
+			System.loadExternalRawData("1103_lrz1_palette", 0xa967c)
+			System.loadExternalRawData("1103_lrz1_miniboss_palette", 0x78e2a)
+			
+			if (nvs.lrz_bnk)
+				System.loadExternalRawData("1103_lrz1_badnik_palette", 0xa967c)
+			
+			//1103 LRZ2
+			System.loadExternalRawData("1103_lrz2_intro_palette", 0x78e6a)	
+			System.loadExternalRawData("1103_lrz2_palette", 0xa96dc)
+		}
+		
+		if (global.zone_act == 0x1600)	
+				System.loadExternalRawData("1103_lrz2_cooledboss_palette", 0xa9cdc)
+				
+		if (global.zone_act == 0x1601) || (global.zone_act == 0x1701)
+		{
+			//1103 Styled HPZ
+			System.loadExternalRawData("1103_hpz_intro_palette", 0xa9d5c)
+			System.loadExternalRawData("1103_hpz_maingame_palette", 0x669fe)
+		}
+	}
+
+	if (nvs.bpz)
+	{
+		System.loadExternalRawData("1103_leftover_bpz", 0xa9a3c)
+	}
+
+	base.yieldExecution()
+}
+
+function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue)
+{
+	bool prioFlag = (objA0.sprite_attributes & 0x8000) != 0
+	u16 ext_atex = 0xa0 + (nvs.em_line - 1) * 0x10
+	s16 flag = prioFlag ? SPRITE_FLAG_PRIO : 0
+	
+	if (nvs.lrz_hpz)
+	{
+		if (objA0.update_address == 0x09089e || objA0.update_address == 0x090880) && objA0.animation.sprite == 6
+		{	
+			string key = "blurple_emerald_super"
+		
+			if (Game.getSetting(SETTING_GFX_ANTIFLICKER) && !(Mods.isModActive("Emeralds Don't Flash")))
+			{
+				bool isFadingBackToMainGame = (global.game_mode == 0x0c && global.stage_type == 1)
+				if ((global.framecounter.low & 0x01) || isFadingBackToMainGame)
+					Renderer.drawSprite(key, px - 0x18, py - 0x10, ext_atex, flag, renderQueue)
+				
+				else
+				{	
+					u32 glow = abs((global.framecounter.low & 0x7f) - 0x40)
+					u32 tint = convertColors32(0xffc0c0c0 - 0x10101 * glow)
+					u32 add = (0x10101 * glow)
+					
+					SpriteHandle blurple_emerald = Renderer.addSpriteHandle(key, px - 0x18, py - 0x10, renderQueue)
+					blurple_emerald.setFlags(flag)
+					blurple_emerald.setUseGlobalComponentTint(false)
+					blurple_emerald.setPaletteOffset(ext_atex)
+					
+					blurple_emerald.setTintColorRGBA(tint)
+					blurple_emerald.setAddedColorRGB(add)
+				}
+			}
+			
+			else
+				Renderer.drawSprite(key, px - 0x18, py - 0x10, ext_atex, flag, renderQueue)
+			
+			return true
+		}
+		
+		if (objA0.update_address == 0x090e1c || objA0.update_address == 0x090e4e || objA0.update_address == 0x090e72 || objA0.update_address == 0x090e86) && objA0.animation.sprite == 6
+		{
+			string key = "blurple_emerald_chaos"
+			Renderer.drawSprite(key, px - 0x04, py - 0x05, ext_atex, flag, renderQueue)
+			return true
+		}
+	}
+
+	return base.Standalone.onWriteToSpriteTable(px, py, renderQueue)
+}
+
+function void NVS.EmeraldPalette()
+{
+	constant array<u16> EMERALD_HPZ = {0xeee, 0xeca, 0xe88, 0xc44, 0xa24}
+
+	u32 offset = 3 * 0x40 + (nvs.em_line - 1) * 0x20
+	u32 dest = (global.zone_act == 0x1601 ? 0x802002 : 0x802182) + offset
+				
+	for (u16 i = 0; i < EMERALD_HPZ.length(); i++)
+	{
+		u16[dest + 2*i] = EMERALD_HPZ[i]
+	}
+}
+
+//# address-hook(0x002ac0) end(0x002af4)
+function void LevelPaletteUpdate.HPZ()
+{
+	base.LevelPaletteUpdate.HPZ()
+	
+	if (nvs.lrz_hpz) && (camera.foreground.x.u16 >= 0x1402)
+		NVS.EmeraldPalette()
+}
+
+//# address-hook(0x05aa02) end(0x05aa2e)
+function void InitLevelTiles.EC()
+{
+	base.InitLevelTiles.EC()
+	
+	if (nvs.lrz_hpz)
+		NVS.EmeraldPalette()
+}
+
+// Re-render Save Slot Arrows so they render above The new portraits
+function bool Standalone.onDrawVdpSpriteCompound(s16 px, s16 py, u8 size, u16 index, u16 renderQueue, u8 spriteCounter)
+{
+	// New Save Slot Arrows
+	if (objA0.update_address == 0x00d42c && (index == 0x93bd || index == 0x83bd))
+	{
+		Renderer.drawVdpSprite(px, py, size, index, 0x9ffa)
+		return true
+	}
+	
+	return base.Standalone.onDrawVdpSpriteCompound(px, py, size, index, renderQueue, spriteCounter)
+}
+
+// New Data Select Zone Portraits
+//# address-hook(0x0d96a) end(0x0d9f2) 
+function void fn00d96a()
+{
+	u16 posY = 0x10 + ((Mods.isModActive("Data Select Options") && Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x08 : 0x0)
+	string icon
+	
+	u16 atex = 0x30
+
+	if !(D1.u8 == objA0.value3a && objA0.value3b != 0)
+	{
+		if (u16[A0 + 0x36] == 0x05 && s16[0xffffb04a + 0x2e] == 0)
+		{
+			if (nvs.lbz && nvs.lbz1_egg)
+			{
+				icon = "lbz_rusty"
+				#if COSINOR_PORT_CUSTOMIZER_ACTIVE
+				{
+					cosinor.CustomPortraitPalette("lbz_rusty", 0)
+					atex = 0xa0 + (spc.pal_line - 1) * 0x10
+				}
+				
+				#else
+				{
+					SpriteHandle dataselpreview = Renderer.addSpriteHandle("lbz_rusty", (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, 0x9ff9)
+					dataselpreview.setFlags(SPRITE_FLAG_PRIO)
+					dataselpreview.setPalette("lbz_rusty", 0)
+				}
+				#endif
+			}
+		}
+
+		else if (nvs.mhz) && (u16[A0 + 0x36] == 0x06 && s16[0xffffb04a + 0x2e] == 0)
+			System.loadExternalRawData("1103_mhz_zone_card", 0x0cbd8)
+
+		else if (u16[A0 + 0x36] == 0x09 && s16[0xffffb04a + 0x2e] == 0)
+		{
+			if (nvs.dsp && !(nvs.lrz_hpz))
+				icon = "old_lrz"
+
+			else if (nvs.lrz_hpz)
+			{	
+				System.loadExternalRawData("1103_lrz_zone_card", 0xcc38)
+
+				if (nvs.dsp)
+					icon = "old_lrz_1103"
+				else
+					icon = "lrz_1103"
+			}
+		}
+
+		else if (nvs.lrz_hpz) && (u16[A0 + 0x36] == 0x0a && s16[0xffffb04a + 0x2e] == 0)
+			System.loadExternalRawData("1103_hpz_zone_card", 0xcc58)
+
+		else if (nvs.dsp) && (u16[A0 + 0x36] == 0x0c && s16[0xffffb04a + 0x2e] == 0)
+			icon = "old_dez"
+
+		if Renderer.hasCustomSprite(icon)
+			Renderer.drawSprite(icon, (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, atex, SPRITE_FLAG_PRIO, 0x9ff9 - 1)
+	}
+	
+	base.fn00d96a()
+}
+
+// Act Select Previews
+function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image)
+{
+	if (Mods.isModActive("OZO Act Select") && (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended")))
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (nvs.lbz)
+			{
+				if zone == 6
+					return stringformat((!nvs.lbz2_fgc ? "nvs_zone06_act2%s" : "nvs_zone06_act2%s_d"), (image % 2 == 0) ? "a" : "b")
+			}
+	
+			if (nvs.mhz)
+			{
+				if zone == 7
+					return stringformat("nvs_zone07_act1%s", (image % 2 == 0) ? "a" : "b")
+			}
+
+		}
+
+		if (nvs.lbz)
+		{
+			if zone == 6 && act == 0
+			{
+				if (!nvs.lbz1_egg)
+				{
+					if (image != 1) && (levelselect.characters == 3 || levelselect.characters == 4)
+						return "nvs_zone06_act1a_knux_g"
+
+					return stringformat("nvs_zone06_act1%s_g", (image % 2 == 0) ? "a" : "b")
+				}
+
+				else
+				{
+					if (image != 1) && (levelselect.characters == 3 || levelselect.characters == 4)
+						return "nvs_zone06_act1a_knux_r"
+
+					return stringformat("nvs_zone06_act1%s_r", (image % 2 == 0) ? "a" : "b")
+				}
+			}
+
+			if zone == 6 && act == 1
+				return stringformat((!nvs.lbz2_fgc ? "nvs_zone06_act2%s" : "nvs_zone06_act2%s_d"), (image % 2 == 0) ? "a" : "b")
+		}
+	
+		if (nvs.mhz)
+		{
+			if zone == 7 && act == 0
+				return stringformat("nvs_zone07_act1%s", (image % 2 == 0) ? "a" : "b")
+
+			if zone == 7 && act == 1
+			{
+				if (nvs.mhz2_ssn)
+					return stringformat("nvs_zone07_act2%s_ssn", (image % 2 == 0) ? "a" : "b")
+			}
+		}
+	}
+
+	else
+	{
+		if Mods.isModActive("jam-difficulty-pale") && (System.getGlobalVariableValueByName("jd.mode") == 0x01)
+		{
+			if (nvs.lbz)
+			{
+				if zone == 5
+					return stringformat((!nvs.lbz2_fgc ? "nvs_zone06_act2%s" : "nvs_zone06_act2%s_d"), (image % 2 == 0) ? "a" : "b")
+			}
+	
+			if (nvs.mhz)
+			{
+				if zone == 6
+					return stringformat("nvs_zone07_act1%s", (image % 2 == 0) ? "a" : "b")
+			}
+
+		}
+
+		if (nvs.lbz)
+		{
+			if zone == 5 && act == 0
+			{
+				if(!nvs.lbz1_egg)
+				{
+					if (image != 1)
+					{
+						if (levelselect.characters == 3 || levelselect.characters == 4)
+							return "nvs_zone06_act1a_knux_g"
+					}
+
+					return stringformat("nvs_zone06_act1%s_g", (image % 2 == 0) ? "a" : "b")
+				}
+
+				else
+				{
+					if (image != 1)
+					{
+						if (levelselect.characters == 3 || levelselect.characters == 4)
+							return "nvs_zone06_act1a_knux_r"
+					}
+
+					return stringformat("nvs_zone06_act1%s_r", (image % 2 == 0) ? "a" : "b")
+				}
+			}
+
+			if zone == 5 && act == 1
+				return stringformat((!nvs.lbz2_fgc ? "nvs_zone06_act2%s" : "nvs_zone06_act2%s_d"), (image % 2 == 0) ? "a" : "b")
+		}
+	
+		if (nvs.mhz)
+		{
+			if zone == 6 && act == 0
+				return stringformat("nvs_zone07_act1%s", (image % 2 == 0) ? "a" : "b")
+
+			if zone == 6 && act == 1
+			{
+				if (nvs.mhz2_ssn)
+					return stringformat("nvs_zone07_act2%s_ssn", (image % 2 == 0) ? "a" : "b")
+			}
+		}
+	}
+
+	if (nvs.lrz_hpz)
+	{
+		if zone == 9 && act == 0
+		{
+			if image == 1
+				return (nvs.lrz_bnk ? "nvs_zone10_act1b_bnk" : "nvs_zone10_act1b")
+	
+			return stringformat("nvs_zone10_act1%s", (image % 2 == 0) ? "a" : "b")
+		}
+
+		if zone == 9 && act == 1
+			return stringformat("nvs_zone10_act2%s", (image % 2 == 0) ? "a" : "b")
+		
+		if zone == 10 && act == 0
+			return stringformat("nvs_zone11_act1%s", (image % 2 == 0) ? "a" : "b")
+	}
+
+	return base.ActSelect.GetZonePreviewKey(zone, act, image)
+}
+
+// S3C Level Select+ Icons
+function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue)
+{	
+	if (nvs.lbz) && (key == "S3CompleteSelect_Zone6")
+	{
+		if (nvs.lbz1_egg)
+			key = "S3CompleteSelect_Zone6_Rusty"
+	}
+
+	else if (nvs.mhz) && (key == "S3CompleteSelect_Zone7")
+		key = "1103_S3CompleteSelect_Zone7"
+	
+	else if (key == "S3CompleteSelect_Zone10")
+	{
+		if (nvs.dsp)
+			key = (!(nvs.lrz_hpz) ? "S3CompleteSelect_Zone10_Old" : "1103_S3CompleteSelect_Zone10_Old")
+		
+		else if (nvs.lrz_hpz)
+			key = "1103_S3CompleteSelect_Zone10"
+	}
+
+	else if (nvs.lrz_hpz) && (key == "S3CompleteSelect_Zone11")
+		key = "1103_S3CompleteSelect_Zone11"
+
+	else if (nvs.dsp) && (key == "S3CompleteSelect_Zone13")
+		key = "S3CompleteSelect_Zone13_Old"
+
+	base.Renderer.drawSprite(key, px, py, atex, flags, renderQueue)
+}

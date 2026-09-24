@@ -1,0 +1,26 @@
+{
+	"nvs_zone06_act1a_g": { "File": "zone06_act1a_g.bmp" },
+	"nvs_zone06_act1a_r": { "File": "zone06_act1a_r.bmp" },
+	"nvs_zone06_act1a_knux_g": { "File": "zone06_act1a_knux_g.bmp" },
+	"nvs_zone06_act1a_knux_r": { "File": "zone06_act1a_knux_r.bmp" },
+	"nvs_zone06_act1b_g": { "File": "zone06_act1b_g.bmp" },
+	"nvs_zone06_act1b_r": { "File": "zone06_act1b_r.bmp" },
+	"nvs_zone06_act2a": { "File": "zone06_act2a.bmp" },
+	"nvs_zone06_act2b": { "File": "zone06_act2b.bmp" },
+	"nvs_zone06_act2a_d": { "File": "zone06_act2a_d.bmp" },
+	"nvs_zone06_act2b_d": { "File": "zone06_act2b_d.bmp" },
+
+	"nvs_zone07_act1a": { "File": "zone07_act1a.bmp" },
+	"nvs_zone07_act1b": { "File": "zone07_act1b.bmp" },
+	"nvs_zone07_act2a_ssn": { "File": "zone07_act2a_ssn.bmp" },
+	"nvs_zone07_act2b_ssn": { "File": "zone07_act2b_ssn.bmp" },
+
+	"nvs_zone10_act1a": { "File": "zone10_act1a.bmp" },
+	"nvs_zone10_act1b": { "File": "zone10_act1b.bmp" },
+	"nvs_zone10_act1b_bnk": { "File": "zone10_act1b_bnk.bmp" },
+	"nvs_zone10_act2a": { "File": "zone10_act2a.bmp" },
+	"nvs_zone10_act2b": { "File": "zone10_act2b.bmp" },
+
+	"nvs_zone11_act1a": { "File": "zone11_act1a.bmp" },
+	"nvs_zone11_act1b": { "File": "zone11_act1b.bmp" }
+}

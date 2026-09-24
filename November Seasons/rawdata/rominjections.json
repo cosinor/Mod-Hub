@@ -1,0 +1,133 @@
+{
+	// HCZ
+	"1103_big_shaker_palette":
+	{
+		"File": "HCZ/Miniboss.bin",
+	},
+	"1103_big_shaker_damage_palette":
+	{
+		"File": "HCZ/Miniboss-Damage.bin",
+	},
+
+	// LBZ
+	"1103_lbz1_palette":
+	{
+		"File": "LBZ/1.bin",
+	},
+	"1103_lbz1_rusty_palette":
+	{
+		"File": "LBZ/1-Rusty.bin",
+	},
+	"1103_lbz2_palette":
+	{
+		"File": "LBZ/2.bin",
+	},
+	"1103_lbz2_gold_palette":
+	{
+		"File": "LBZ/2-Gold.bin",
+	},
+	"1103_lbz2_water_palette":
+	{
+		"File": "LBZ/2-Water.bin",
+	},
+
+	// MHZ
+	"1103_mhz_zone_card":
+	{
+		"File": "MHZ/Zone Card.bin",
+	},
+	"1103_mhz1_palette":
+	{
+		"File": "MHZ/1.bin",
+	},
+	"1103_mhz2_autumn_palette":
+	{
+		"File": "MHZ/2.bin",
+	},
+	"1103_mhz2_winter_palette":
+	{
+		"File": "MHZ/2-Winter.bin",
+	},
+	"1103_mhz2_sunset_boss_palette_tca/uozo":
+	{
+		"File": "MHZ/Boss_Sunset.bin"
+	},
+	"1103_mhz2_day_boss_palette_tca/uozo":
+	{
+		"File": "MHZ/Boss_Day.bin"
+	},
+	"1103_mhz1_complete_palette":
+	{
+		"File": "MHZ/1-Ex.bin",
+	},
+	"1103_mhz2_autumn_complete_palette":
+	{
+		"File": "MHZ/2-Ex.bin",
+	},
+	"1103_mhz2_winter_complete_palette":
+	{
+		"File": "MHZ/2-Winter-Ex.bin",
+	},
+	"1103_mhz2_sunset_boss_complete_palette_tca/uozo":
+	{
+		"File": "MHZ/Boss_Sunset-Ex.bin"
+	},
+	"1103_mhz2_day_boss_complete_palette_tca/uozo":
+	{
+		"File": "MHZ/Boss_Day-Ex.bin"
+	},
+
+	// LRZ
+	"1103_lrz1_palette":
+	{
+		"File": "LRZ/1.bin",
+	},
+	"1103_lrz1_badnik_palette":
+	{
+		"File": "LRZ/1-Badnik.bin",
+	},
+	"1103_lrz_zone_card":
+	{
+		"File": "LRZ/Zone Card.bin",
+	},
+	"1103_lrz1_palette_cycle":
+	{
+		"File": "LRZ/1-Cycle.bin",
+	},
+	"1103_lrz1_miniboss_palette":
+	{
+		"File": "LRZ/Miniboss.bin",
+	},
+	"1103_lrz2_intro_palette":
+	{
+		"File": "LRZ/2-Intro.bin",
+	},
+	"1103_lrz2_palette":
+	{
+		"File": "LRZ/2.bin",
+	},
+	"1103_lrz2_cooledboss_palette":
+	{
+		"File": "LRZ/Boss Act.bin",
+	},
+
+	// HPZ
+	"1103_hpz_intro_palette":
+	{
+		"File": "HPZ/Intro.bin",
+	},
+	"1103_hpz_maingame_palette":
+	{
+		"File": "HPZ/Main.bin",
+	},
+	"1103_hpz_zone_card":
+	{
+		"File": "HPZ/Zone Card.bin",
+	},
+
+	// BPZ
+	"1103_leftover_bpz":
+	{
+		"File": "BPZ.bin",
+	}
+}

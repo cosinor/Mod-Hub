@@ -1,0 +1,194 @@
+{
+	"Metadata":
+	{
+		"Name": "November Seasons",
+		"UniqueID": "november-seasons",
+		"Author": "co$in0r",
+		"Description": "Tweaked ports of several zone and enemy palettes from the 1103 Sonic 3 prototype, with some options for your own preference.",
+		"ModVersion": "31/8/26"
+	},
+
+	"OtherMods":
+	{
+		"time-consistent-adventure":
+		{
+			"Priority" : "Higher"
+		},
+
+		"useott-s-original-zone-order":
+		{
+			"Priority" : "Higher"
+		},
+
+		"uozo-palettes":
+		{
+			"Priority" : "Higher"
+		}
+	},
+
+	"Settings":
+	{
+		"List":
+		[	
+			{
+				"InternalName": "nvs.dsp",
+				"DisplayName": "408 DS Zone Portraits",
+				"Variable": "nvs.dsp",
+				"Category": "Misc.",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+			
+			{
+				"InternalName": "nvs.bpz",
+				"DisplayName": "1103 Leftover BPZ Palette",
+				"Variable": "nvs.bpz",
+				"Category": "Misc.",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.bsk",
+				"DisplayName": "1103 Big Shaker Palette",
+				"Variable": "nvs.bsk",
+				"Category": "Misc.",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.lbz",
+				"DisplayName": "1103 LBZ Colors",
+				"Variable": "nvs.lbz",
+				"Category": "LBZ Settings",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.lbz1_egg",
+				"DisplayName": "Death Egg Colors",
+				"Variable": "nvs.lbz1_egg",
+				"Category": "LBZ Settings",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Sulfide Green",
+					"1": "Iron Brown",
+				}
+			},
+
+			{
+				"InternalName": "nvs.lbz2_fgc",
+				"DisplayName": "LBZ2 FG Gold Shades",
+				"Variable": "nvs.lbz2_fgc",
+				"Category": "LBZ Settings",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Unique (Original)",
+					"1": "Act 1 Consistent",
+				}
+			},
+		
+			{
+				"InternalName": "nvs.mhz",
+				"DisplayName": "Leftover 1103 MHZ1 Palette",
+				"Variable": "nvs.mhz",
+				"Category": "MHZ Settings",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.mhz1_grnd",
+				"DisplayName": "Ground Sahdes in MHZ1",
+				"Variable": "nvs.mhz1_grnd",
+				"Category": "MHZ Settings",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "4 Shades (1103 Leftover)",
+					"1": "5 Shades (Final)",
+				}
+			},
+
+			{
+				"InternalName": "nvs.mhz2_ssn",
+				"DisplayName": "1103 Inspired MHZ2 Seasons",
+				"Variable": "nvs.mhz2_ssn",
+				"Category": "MHZ Settings",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.lrz_hpz",
+				"DisplayName": "1103 LRZ & HPZ Palettes",
+				"Variable": "nvs.lrz_hpz",
+				"Category": "LRZ & HPZ Settings",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+
+			{
+				"InternalName": "nvs.lrz_bnk",
+				"DisplayName": "Leftover LRZ1 Badnik Palette",
+				"Variable": "nvs.lrz_bnk",
+				"Category": "LRZ & HPZ Settings",
+				"DefaultValue": "0",
+				"Options":
+				{
+					"0": "Disabled",
+					"1": "Enabled",
+				}
+			},
+			
+			{
+				"InternalName": "nvs.em_line",
+				"DisplayName": "Super Emerald Palette Line",
+				"Variable": "nvs.em_line",
+				"Category": "LRZ & HPZ Settings",
+				"DefaultValue": "1",
+				"Options":
+				{
+					"1": "10",
+					"2": "11",
+					"3": "12",
+					"4": "13",
+					"5": "14",
+					"6": "15",
+				}
+			}
+		]
+	}
+}
