@@ -1,7 +1,8 @@
 global s16 FBZ.palettes
+global u8 nbb.ds_zone
 
-// FBZ Palettes 
-function void yieldExecution()
+//# post-update-hook
+function void PostFrameUpdate() // FBZ palettes 
 {
 	if (FBZ.palettes == 0)
 	{
@@ -30,34 +31,60 @@ function void yieldExecution()
 	if (Mods.isModActive("prototype styled fbz bg + night bg") && System.getGlobalVariableValueByName("config_bgtype") != 2)
 		u16[0x052dc4] = 0xeee
 	
-	base.yieldExecution()
+	base.PostFrameUpdate()
 }
 
-// Data Select Portraits
-//# address-hook(0x00d96a) end(0x00d9f2)
-function void fn00d96a()
+function string getDataSelectNBBSprite()
 {
-	string fbz_key
-	u16 posY = 0x10 + ((Mods.isModActive("Data Select Options") && Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x08 : 0x00)
+	if (Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.zone_icons") && System.getGlobalVariableValueByName("tca.fbz_s3_icon"))
+		return "fbz_portrait_s3_TCA"
 	
-	if Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.zone_icons") && System.getGlobalVariableValueByName("tca.fbz_s3_icon")
-		fbz_key = "fbz_portrait_s3_TCA"
+	if (Mods.isModActive("Useott's Original Zone Order") && System.getGlobalVariableValueByName("useottsOriginalZoneOrder.FBZDataSelectPreview"))
+		return "fbz_portrait_s3"
+}
+
+// Re-render save slot arrows to appear above FBZ portraits and remove original FBZ portrait
+function bool Standalone.onDrawVdpSpriteCompound(s16 px, s16 py, u8 size, u16 index, u16 renderQueue, u8 spriteCounter)
+{
+	if (objA0.update_address == 0x00d42c)
+	{
+		if (objA0.compound.count >= 1 && (index == 0x83bd || index == 0x93bd))
+		{
+			Renderer.drawVdpSprite(px, py, size, index, 0x9ffa)
+			return true
+		}
+	
+		else if (objA0.compound.count >= 2)
+		{
+		#if !COSINOR_PORT_CUSTOMIZER_ACTIVE
+			if (nbb.ds_zone == 0x07 && Renderer.hasCustomSprite(getDataSelectNBBSprite()))
+				return true
+		#endif
+		}
+	}
+	
+	return base.Standalone.onDrawVdpSpriteCompound(px, py, size, index, renderQueue, spriteCounter)
+}
+
+//# address-hook(0x00d96a) end(0x00d9f2)
+function void fn00d96a() // Data Select portraits
+{
+	u16 posX = (u16[A0 + 0x12] - camera.foreground.x.u16) - 168
+	u16 posY = 0x10 + (getScreenHeight() - 224) / 2
+	
+	nbb.ds_zone = D1.u8
 		
-	else if Mods.isModActive("Useott's Original Zone Order") && System.getGlobalVariableValueByName("useottsOriginalZoneOrder.FBZDataSelectPreview") == 1
-		fbz_key = "fbz_portrait_s3"
-	
-	if u16[A0 + 0x36] == 7 && s16[0xffffb04a + 0x2e] == 0 && Renderer.hasCustomSprite(fbz_key)
+	if (nbb.ds_zone == 7 && u16[0xffffb04a + 0x2e] == 0) && Renderer.hasCustomSprite(getDataSelectNBBSprite())
 	{
 		#if COSINOR_PORT_CUSTOMIZER_ACTIVE
 		{
 			cosinor.CustomPortraitPalette("portraits", (FBZ.palettes == 0 ? 0 : FBZ.palettes == 1 ? 1 : 2))
-			Renderer.drawSprite(fbz_key, (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, 0xa0 + (spc.pal_line - 1) * 0x10, SPRITE_FLAG_PRIO, 0x9ff9)
+			Renderer.drawSprite(getDataSelectNBBSprite(), posX, posY, 0xa0 + (spc.pal_line - 1) * 0x10, SPRITE_FLAG_PRIO, 0x9ff9)
 		}
-	
 		#else
 		{
-			SpriteHandle dataselpreview = Renderer.addSpriteHandle(fbz_key, (objA0.position.x.u16 + getScreenExtend() - 208) - getScreenExtend() + 40, posY, 0x9ff9)		
-			dataselpreview.setFlags(SPRITE_FLAG_PRIO)
+			SpriteHandle dataselpreview = Renderer.addSpriteHandle(getDataSelectNBBSprite(), posX, posY, 0x9ff9)		
+			dataselpreview.setFlags(SPRITE_FLAG_PRIO) 
 			dataselpreview.setPalette("portraits", (FBZ.palettes == 0 ? 0 : FBZ.palettes == 1 ? 1 : 2))
 		}
 		#endif
@@ -66,7 +93,7 @@ function void fn00d96a()
 	base.fn00d96a()
 }
 
-function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image)
+function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image) // Act Select previews
 {
 	if (Mods.isModActive("OZO Act Select") && (Mods.isModActive("Original zone order") || Mods.isModActive("Useott's Original Zone Order") || Mods.isModActive("Time Consistent Adventure") && System.getGlobalVariableValueByName("tca.intended")))
 	{
@@ -149,8 +176,7 @@ function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image)
 	return base.ActSelect.GetZonePreviewKey(zone, act, image)
 }
 
-// S3C LS+ Compatibility
-function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue)
+function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue) // S3C LS+ compatibility
 {
 	if (!Mods.isModActive("Time Consistent Adventure") && key == "S3CompleteSelect_Zone8_alt") && (FBZ.palettes != 2)
 	{

@@ -1,0 +1,218 @@
+global s16 AIZ1.palettes
+
+//# post-update-hook
+function void PostFrameUpdate() // AIZ palettes 
+{
+	System.loadExternalRawData(AIZ1.palettes == 1 ? "aiz1_personalized_intro_palette" : "aiz1_faithful_intro_palette", 0x0a8b1c)
+	System.loadExternalRawData(AIZ1.palettes == 1 ? "aiz1_personalized_main_palette" : "aiz1_faithful_main_palette", 0x0a8b7c)
+	System.loadExternalRawData(AIZ1.palettes == 1 ? "aiz1_personalized_water_palette" : "aiz1_faithful_water_palette", 0x0a8c9c)
+	System.loadExternalRawData(AIZ1.palettes == 1 ? "aiz_personalized_zone_icon" : "aiz_faithful_zone_icon", 0x0cb18)
+
+	if Mods.isModActive("Drown The Flower") && (Mods.isModActive("Useott's Unburnt AIZ2") && (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.willnotburn")))
+		System.loadExternalRawData("aiz1_flower_fix", 0x0a8cfa)	
+
+	base.PostFrameUpdate()
+}
+
+function string ActSelect.GetZonePreviewKey(u8 zone, u8 act, u8 image) // Act Select previews
+{
+	if zone == 0 && act == 0 && image != 1
+	{
+		return (AIZ1.palettes == 0 ? "zone01_act1a_f" : "zone01_act1a_p")
+	}
+
+	if Mods.isModActive("Useott's Unburnt AIZ2")
+	{
+		if (zone == 0 && act == 0 && image == 1)
+		{
+			if (AIZ1.palettes == 0)
+			{
+				return ((System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 0) ? "zone01_act1b_u1_f" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 1) ? "zone01_act1b_u2_f" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 2) ? "zone01_act1b_um_f" : "zone01_act1b_uc_f")
+			}
+
+			else
+			{
+				return ((System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 0) ? "zone01_act1b_u1_p" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 1) ? "zone01_act1b_u2_p" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 2) ? "zone01_act1b_um_p" : "zone01_act1b_uc_p")
+			}
+		}
+		
+		if (zone == 0 && act == 1 && ((System.getGlobalVariableValueByName("UseottsUnburntAIZ2.unburn")) == 0 || (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.unburn")) == 1 && levelselect.characters == 3 || levelselect.characters == 4)) 
+		{
+			if (AIZ1.palettes == 0)
+			{
+				if (image != 1) 
+				{
+					return ((System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 0) ? "zone01_act2a_u1_f" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 1) ? "zone01_act2a_u2_f" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 2) ? "zone01_act2a_um_f" : "zone01_act2a_uc_f")
+				}
+				
+				else if (image == 1)
+				{
+					return "zone01_act2b_u_f"
+				}
+			}
+			
+			else
+			{
+				if (image != 1) 
+				{
+					return ((System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 0) ? "zone01_act2a_u1_p" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 1) ? "zone01_act2a_u2_p" : (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.background") == 2) ? "zone01_act2a_um_p" : "zone01_act2a_uc_p")
+				}
+				
+				else if (image == 1)
+				{
+					return "zone01_act2b_u_p"
+				}
+			}
+		}
+	}
+
+	return base.ActSelect.GetZonePreviewKey(zone, act, image)
+}
+
+// Useott's Unburnt AIZ2 origins height fix by Albert010: Changes the hardcoded height values stored in D.u16 to use AIR's getScreenHeight function 
+//# address-hook(0x23b680) end(0x23b772)
+function void fn23b680()
+{
+	if global.zone_act == 0x01 && Mods.isModActive("Useott's Unburnt AIZ2") && (System.getGlobalVariableValueByName("UseottsUnburntAIZ2.willnotburn"))
+	{
+		if camera.position.x.u16 < 0x3a8e
+		{
+			if (water.height.current < camera.position.y.u16)
+			{
+				base.fn23b680()
+				return
+			}
+			A4 = 0x23b258
+			A5 = 0xffffa808
+			D1.u16 = water.height.current - camera.foreground.y.u16
+			if (D1.s16 >= getScreenHeight())
+			{
+				fn239e8c()
+			}
+			else
+			{
+				--D1.u16
+				fn239e90()
+
+				u32 backupA1 = A1
+				A1 = 0xffffa840
+				A6 = 0x23a170
+				D0.u16 = water.height.current
+				D1.u16 = (getScreenHeight() - 2) - D1.u16 // Changed from 0xde to getScreenHeight() - 2
+				D2.u16 = (level.framecounter + D0.u16 * 2) & 0x7e
+				A6 += D2.u16
+				D6.s16 = -s16(camera.foreground.x.u16)
+				fn239e74()
+
+				A1 = backupA1
+				A2 = 0xffffa840
+				A4 = 0x23b258
+				A5 = 0xffffa808
+				A6 = 0x23a3b0
+				D0.u16 = water.height.current - camera.foreground.y.u16 + camera.background.y.u16
+				D2.u16 = ((level.framecounter >> 1) + D0.u16 * 2) & 0x7e
+				A6 += D2.u16
+				fn239f18()
+			}
+		}
+		else
+		{
+			A1 = 0xffffa800
+			A6 = 0x23bc5a
+			D0.u16 = camera.foreground.y.u16
+			D1.u16 = getScreenHeight() - 1 // Changed from 0xdf to getScreenHeight() - 1
+			D2.u16 = level.framecounter + D0.u16 * 2
+			D3 = 0x3e
+			D6.s16 = -s16(camera.foreground.x.u16)
+			if (water.height.current > D0.u16)
+			{
+				D4.u16 = water.height.current - D0.u16
+				if (D4.u16 <= D1.u16)
+				{
+					D1.u16 = D4.u16 - 1
+					D2.u16 &= D3.u16
+					//A6.u16 += D2.u16
+					fn239e74()
+
+					D0.u16 = water.height.current
+					D1.u16 = (getScreenHeight() - 2) - D1.u16 // Changed from 0xde to getScreenHeight() - 2
+					D2.u16 = level.framecounter + D0.u16 * 2
+					A6 = 0x00
+					D3 = 0x7e
+				}
+			}
+			else
+			{
+				D4.u16 = water.height.current - D0.u16	// Still needed?
+				A6 = 0x23a170
+				D3 = 0x7e
+			}
+
+			D2.u16 &= D3.u16
+			//A6.u16 += D2.u16
+			fn239e74()
+
+			A1 = 0xffffe000		// Location of linewise scroll offsets
+			A2 = 0xffffa800
+			A4 = 0x23bc06
+			A5 = 0xffffa9c0
+			A6 = 0x23be5a
+			D0.u16 = camera.background.y.u16
+			D1.u16 = getScreenHeight() - 1 // Changed from 0xdf to getScreenHeight() - 1
+			D2.s16 = s16(level.framecounter) >> 1
+			D2.u16 += D0.u16 * 2
+			D3 = 0x3e
+			if (water.height.current > camera.foreground.y.u16)
+			{
+				D4.u16 = water.height.current - camera.foreground.y.u16
+				if (D4.u16 <= D1.u16)
+				{
+					D1.u16 = D4.u16 - 1
+					D2.u16 &= D3.u16
+					A6.u16 += D2.u16
+					fn239f18()
+
+					A4 = 0x23bc06
+					A5 = 0xffffa9c0
+					D0.u16 = water.height.current - camera.foreground.y.u16 + camera.background.y.u16
+					D1.u16 = (getScreenHeight() - 2) - D1.u16 // Changed from 0xde to getScreenHeight() - 2
+					D2.u16 = s16(level.framecounter) >> 1
+					D2.u16 += D0.u16 * 2
+					A6 = 0x23a3b0
+					D3 = 0x7e
+				}
+			}
+			else
+			{
+				D4.u16 = water.height.current - camera.foreground.y.u16	// Still needed?
+				A6 = 0x23a3b0
+				D3 = 0x7e
+			}
+
+			D2.u16 &= D3.u16
+			A6.u16 += D2.u16
+			fn239f18()
+
+			if (u16[0xffffeed6] != 0)
+			{
+				A1 = 0xffffe000		// Location of linewise scroll offsets
+				D0.s16 = -s16[0xffffee98]
+				for (u8 i = 0; i < 0x40; ++i)
+				{
+					u16[A1] = D0.u16
+					A1 += 4
+				}
+			}
+		}
+	}
+	
+	else base.fn23b680()
+}
+
+function void Renderer.drawSprite(u64 key, s16 px, s16 py, u16 atex, u8 flags, u16 renderQueue) // S3C LS+ compatibility
+{
+	if key == ("S3CompleteSelect_Zone1")
+		key = (AIZ1.palettes == 1 ? "S3CompleteSelect_AIZ_Personalized" : "S3CompleteSelect_AIZ_Faithful")
+	
+	base.Renderer.drawSprite(key, px, py, atex, flags, renderQueue)
+}
