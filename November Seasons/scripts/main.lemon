@@ -203,16 +203,23 @@ function void fn00d96a() // Additional data select zone portraits
 		if (nvs.dsp && nvs.ds_zone == 0x0c)
 			icon = "old_dez"
 
+		u16 portraitQueue = cosinor.MJCheck() ? 0x9fe2 : 0x9ff9
+
 		if Renderer.hasCustomSprite(icon)
 		{
 			if icon != "lbz_rusty"
-				Renderer.drawSprite(icon, posX, posY, atex, SPRITE_FLAG_PRIO, 0x9ff9)
+				Renderer.drawSprite(icon, posX, posY, atex, SPRITE_FLAG_PRIO, portraitQueue)
 			else if Mods.isModActive("Customizable Save Portraits")
-				Renderer.drawSprite("lbz_rusty", posX, posY, atex, SPRITE_FLAG_PRIO, 0x9ff9)
+				Renderer.drawSprite("lbz_rusty", posX, posY, atex, SPRITE_FLAG_PRIO, portraitQueue)
 		}
 	}
 	
 	base.fn00d96a()
+}
+
+function bool cosinor.MJCheck() // allows MJ's custom portraits to display over mine when enabled
+{
+	return base.cosinor.MJCheck()
 }
 
 function bool Standalone.onWriteToSpriteTable(s16 px, s16 py, u16 renderQueue) // Extra Sprites
