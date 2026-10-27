@@ -5,7 +5,6 @@ global bool spc.old_dez
 global bool spc.silly
 
 global u16 spc.pal_line
-
 #define COSINOR_PORT_CUSTOMIZER_ACTIVE = true
 
 //# address-hook(0x00d96a) end(0x00d9f2)
@@ -78,8 +77,7 @@ function void fn00d96a() // Where new portraits are drawn
 					}
 				}
 							
-				else
-					card = (playthroughStatus == 1 ? "clearCard_kte" : playthroughStatus == 2 ? "clearCard_kte_super" : 0)
+				else card = (playthroughStatus == 1 ? "clearCard_kte" : playthroughStatus == 2 ? "clearCard_kte_super" : 0)
 			}
 					
 			if (objA0.animation.frame == 0x1b)
@@ -129,9 +127,9 @@ function bool MF.useNewPortraits() // for the above function to work
 	return base.MF.useNewPortraits()
 }
 
-function u16 TW.fakeOriginalTint_DataSel(u16 target)
+function u16 TW.fakeOriginalTint_DataSel(u16 target) // The Works compatibility
 {
-	return TW.fakeOriginalTint_DataSel(target)
+	return base.TW.fakeOriginalTint_DataSel(target)
 }
 
 // Re-render save slot arrows to appear above custom portraits & remove the original portraits
@@ -139,8 +137,18 @@ function bool Standalone.onDrawVdpSpriteCompound(s16 px, s16 py, u8 size, u16 in
 {
 	if (objA0.update_address == 0x00d42c)
 	{
-		if objA0.compound.count >= 1 && (index == 0x83bd || index == 0x93bd)
+		if (objA0.compound.count >= 1 && (index == 0x83bd || index == 0x93bd))
 		{
+			if Mods.isModActive("Data Select Options") && (Mods.getModPriority("Data Select Options") < Mods.getModPriority("Customizable Save Portraits"))
+			{
+				if (System.getGlobalVariableValueByName("lsds.nodetail") && objA0.update_address == 0x00d42c && (index == 0x93bd || index == 0x83bd) && u8[A0 + 0x38] == 0)
+					Renderer.drawVdpSprite(px, py + ((Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x18 : 0x10), size, index, renderQueue)
+			
+				else Renderer.drawVdpSprite(px, py + ((Mods.isModActive("Origins Screen Resolution") && getScreenHeight() == 240) ? 0x08 : 0x00), size, index, 0x9ffa)
+					
+				return true
+			}
+			
 			Renderer.drawVdpSprite(px, py, size, index, 0x9ffa)
 			return true
 		}
